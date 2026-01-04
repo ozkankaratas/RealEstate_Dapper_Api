@@ -1,0 +1,7 @@
+﻿CANLIYA ALIM KILAVUZU
+
+- Proje canlıya alınırken ViewComponent'lerdeki api isteği atılan adreslerin localhost olarak kalmaması için bu dosya oluşturulmuştur.
+
+- localhost yerine canlı sunucu adresi yazılmalıdır.
+
+Örnek: localhost:5000/api/values  =>  www.siteniz.com/api/values
