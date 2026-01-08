@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RealEstate_Dapper_UI.Dtos.BottomGridDtos;
 
 namespace RealEstate_Dapper_UI.ViewComponents.HomePage
@@ -18,7 +19,7 @@ namespace RealEstate_Dapper_UI.ViewComponents.HomePage
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ResultBottomGridDto>>(jsonData);
+                var values = JsonConvert.DeserializeObject<List<ResultBottomGridDto>>(jsonData);
                 return View(values);
             }
             return View();
