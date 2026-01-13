@@ -27,13 +27,13 @@ namespace RealEstate_Dapper_UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddEmployee()
+        public IActionResult CreateEmployee()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddEmployee(CreateEmployeeDto createEmployeeDto)
+        public async Task<IActionResult> CreateEmployee(CreateEmployeeDto createEmployeeDto)
         {
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createEmployeeDto);

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using RealEstate_Dapper_UI.Dtos.CategoryDtos;
-using RealEstate_Dapper_UI.Dtos.ProductDto;
 using RealEstate_Dapper_UI.Dtos.ProductDtos;
 
 namespace RealEstate_Dapper_UI.Controllers
@@ -28,7 +27,7 @@ namespace RealEstate_Dapper_UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddProduct()
+        public async Task<IActionResult> CreateProduct()
         {
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("https://localhost:44338/api/Categories");

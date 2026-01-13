@@ -1,4 +1,4 @@
-﻿namespace RealEstate_Dapper_UI.Dtos.ProductDto
+﻿namespace RealEstate_Dapper_UI.Dtos.ProductDtos
 {
     public class ResultProductDto
     {
