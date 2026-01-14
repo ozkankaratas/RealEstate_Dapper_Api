@@ -7,9 +7,11 @@
         public string city { get; set; }
         public string district { get; set; }
         public string address { get; set; }
-        public string categoryID { get; set; }
+        public int productCategory { get; set; }
         public string coverimage { get; set; }
         public string type { get; set; }
+        public bool dealOfTheDay { get; set; }
         public DateTime date { get; set; }
     }
 }
+

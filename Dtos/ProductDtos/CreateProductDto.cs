@@ -1,8 +1,7 @@
-﻿namespace RealEstate_Dapper_UI.Dtos.ProductDtos
+﻿namespace RealEstate_Dapper_Api.Dtos.ProductDtos
 {
-    public class UpdateProductDto
+    public class CreateProductDto
     {
-        public int productID { get; set; }
         public string title { get; set; }
         public decimal price { get; set; }
         public string city { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RealEstate_Dapper_Api.Dtos.ProductDtos;
 using RealEstate_Dapper_Api.Repositories.ProductRepository;
 
 namespace RealEstate_Dapper_Api.Controllers
@@ -18,6 +19,34 @@ namespace RealEstate_Dapper_Api.Controllers
         public async Task<IActionResult> ProductList()
         {
             var values = await _productRepository.GetAllProductAsyn();
+            return Ok(values);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto)
+        {
+            _productRepository.CreateProduct(createProductDto);
+            return Ok("İlan Başarılı Bir Şekilde Eklendi");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            _productRepository.DeleteProduct(id);
+            return Ok("İlan Başarılı Bir Şekilde Silindi");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProduct(UpdateProductDto updateProductDto)
+        {
+            _productRepository.UpdateProduct(updateProductDto);
+            return Ok("İlan Başarılı Bir Şekilde Güncellendi");
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProduct(int id)
+        {
+            var values = await _productRepository.GetProduct(id);
             return Ok(values);
         }
 

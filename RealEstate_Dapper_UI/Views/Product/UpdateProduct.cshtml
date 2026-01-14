@@ -1,6 +1,6 @@
-﻿@model CreateProductDto
+﻿@model UpdateProductDto
 @{
-    ViewData["Title"] = "CreateProduct";
+    ViewData["Title"] = "UpdateProduct";
     Layout = "~/Views/Admin/Index.cshtml";
 }
 
@@ -8,10 +8,12 @@
     <div class="row g-4">
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Yeni İlan Ekleme Sayfası</h6>
+                <h6 class="mb-4">İlan Güncelleme Sayfası</h6>
                 <form method="post">
+                    <input type="hidden" asp-for="productID" />
+                    <input type="hidden" asp-for="date" />
                     <label>İlan Tarihi</label>
-                    <input type="text" asp-for="date" class="form-control" value="@Model.date.ToString("dd.MM.yyyy")" readonly />
+                    <input type="text" class="form-control" value="@Model.date.ToString("dd.MM.yyyy")" readonly />
                     <br />
                     <label>İlan Başlığı</label>
                     <input type="text" asp-for="title" class="form-control" />
@@ -43,3 +45,4 @@
         </div>
     </div>
 </div>
+
