@@ -27,5 +27,19 @@ namespace RealEstate_Dapper_Api.Controllers
             var values = await _productRepository.GetAllProductWithCategoryAsync();
             return Ok(values);
         }
+
+        [HttpPut("ChangeDealOfTheDayStatusToFalse/{id}")]
+        public async Task<IActionResult> ChangeDealOfTheDayStatusToFalse(int id)
+        {
+            _productRepository.ProductDealOfTheDayStatusChangeToFalse(id);
+            return Ok("İlan Günün Fırsatları Arasından Çıkarıldı");
+        }
+
+        [HttpPut("ChangeDealOfTheDayStatusToTrue/{id}")]
+        public async Task<IActionResult> ChangeDealOfTheDayStatusToTrue(int id)
+        {
+            _productRepository.ProductDealOfTheDayStatusChangeToTrue(id);
+            return Ok("İlan Günün Fırsatları Arasına Eklendi");
+        }
     }
 }

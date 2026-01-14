@@ -20,3 +20,44 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.toggle-switch {
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    border-radius: 20px;
+    position: relative;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+    .toggle-switch.active {
+        background-color: #28a745;
+    }
+
+    .toggle-switch.passive {
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+    }
+
+    .toggle-switch::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: white;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .toggle-switch.active::after {
+        right: 4px; 
+    }
+
+    .toggle-switch.passive::after {
+        left: 4px; 
+        background-color: #adb5bd;
+    }

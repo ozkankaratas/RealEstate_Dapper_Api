@@ -24,7 +24,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 
         public async Task<List<ResultProductWithCategoryDto>> GetAllProductWithCategoryAsync()
         {
-            string query = @"SELECT p.ProductID, p.Title, p.Price, p.City, p.District, p.Address, c.CategoryName, p.CoverImage, p.Type
+            string query = @"SELECT p.ProductID, p.Title, p.Price, p.City, p.District, p.Address, c.CategoryName, p.CoverImage, p.Type, p.DealOfTheDay
                             FROM Product p
                             INNER JOIN Category c ON p.ProductCategory = c.CategoryID";
             using (var connection = _context.CreateConnection())
@@ -32,6 +32,24 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
                 var values = await connection.QueryAsync<ResultProductWithCategoryDto>(query);
                 return values.ToList();
             }
-        } 
+        }
+
+        public async void ProductDealOfTheDayStatusChangeToFalse(int id)
+        {
+            string query = "UPDATE Product SET DealOfTheDay = 0 WHERE ProductID = @Id";
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, new { Id = id });
+            }
+        }
+
+        public async void ProductDealOfTheDayStatusChangeToTrue(int id)
+        {
+            string query = "UPDATE Product SET DealOfTheDay = 1 WHERE ProductID = @Id";
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, new { Id = id });
+            }
+        }
     }
 }
