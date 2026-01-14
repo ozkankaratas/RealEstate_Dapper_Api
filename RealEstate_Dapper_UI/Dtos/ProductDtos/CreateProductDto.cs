@@ -10,5 +10,6 @@
         public string categoryID { get; set; }
         public string coverimage { get; set; }
         public string type { get; set; }
+        public DateTime date { get; set; }
     }
 }

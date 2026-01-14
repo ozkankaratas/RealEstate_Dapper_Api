@@ -15,6 +15,8 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
+                                <th scope="col">İlan Tarihi</th>
+                                <th scope="col">Kapak Resmi</th>
                                 <th scope="col">İlan Başlığı</th>
                                 <th scope="col">Şehir</th>
                                 <th scope="col">İlçe</th>
@@ -33,6 +35,12 @@
                                 count++;
                                 <tr>
                                     <th scope="row">@count</th>
+                                    <td>@item.date.ToString("dd.MM.yyyy")</td>
+                                    <td>
+                                        <img src="@(string.IsNullOrEmpty(item.coverimage) ? "/productImages/default.png" : item.coverimage)"
+                                             alt="@item.title"
+                                             width="80" />
+                                    </td>
                                     <td>@item.title</td>
                                     <td>@item.city</td>
                                     <td>@item.district</td>
@@ -41,7 +49,7 @@
                                     <td>@item.type</td>
                                     <td><a href="/Product/DeleteProduct" class="btn btn-outline-danger">Sil</a></td>
                                     <td><a href="/Product/UpdateProduct" class="btn btn-outline-success">Güncelle</a></td>
-                                    <td><a href="/Product/ProductDetail/@item.productID" class="btn btn-outline-primary">Sitede Gör</a></td>
+                                    <td><a href="/Product/ProductDetail/@item.productID" class="btn btn-outline-primary">Detay</a></td>
                                     <td class="text-center align-middle">
                                         @if (item.dealOfTheDay)
                                         {
