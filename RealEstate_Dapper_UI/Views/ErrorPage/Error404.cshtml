@@ -1,0 +1,444 @@
+﻿@{
+    ViewData["Title"] = "404 - Kayıp Parsel";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            overscroll-behavior: none;
+        }
+
+        .error-container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px; /* Konteyner genişletildi */
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* GÜNCELLEME: Arkaplan opaklığı artırıldı */
+        .map-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg');
+            background-size: cover;
+            opacity: 0.2;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .pin-container {
+            font-size: 5rem;
+            color: #dc3545;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .shadow-pulse {
+            width: 40px;
+            height: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            margin: -15px auto 20px auto;
+            animation: pulse 2s infinite;
+        }
+
+        h1 {
+            font-weight: 800;
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p.lead {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- OYUN ALANI (GÜNCELLENDİ) --- */
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 480px; /* Web için genişletildi (Eskisi 320px) */
+            margin: 0 auto 20px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            background: #2c3e50;
+            border: 4px solid #fff;
+            aspect-ratio: 3 / 4;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            cursor: pointer;
+        }
+
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(44, 62, 80, 0.9);
+            color: white;
+            z-index: 10;
+            transition: opacity 0.3s;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .score-board {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            font-family: 'Press Start 2P', cursive, sans-serif;
+            font-size: 2rem; /* Skor biraz büyütüldü */
+            color: rgba(255,255,255,0.3);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .btn-game {
+            background: #f1c40f;
+            color: #2c3e50;
+            border: none;
+            padding: 15px 30px;
+            font-weight: bold;
+            font-family: 'Press Start 2P', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #b7950b;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+
+            .btn-game:active {
+                transform: translateY(2px);
+                box-shadow: 0 2px 0 #b7950b;
+            }
+
+        /* Mobil Düzenlemeler */
+        @@media (max-width: 576px) {
+            /* Mobilde oyun alanını tekrar küçültüyoruz ki ekrana sığsın */
+            .game-wrapper {
+                max-width: 320px;
+            }
+
+            .pin-container {
+                font-size: 4rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn-action-group {
+                flex-direction: column;
+            }
+
+                .btn-action-group .btn {
+                    width: 100%;
+                }
+        }
+
+        @@keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-20px);
+            }
+
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        @@keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="map-bg"></div>
+
+    <div class="error-container">
+        <div class="pin-container">
+            <i class="fa-solid fa-location-dot"></i>
+        </div>
+        <div class="shadow-pulse"></div>
+
+        <h1>Konum Attın Gelmedik mi?</h1>
+        <p class="lead">
+            Aradığınız sayfa <strong>kentsel dönüşüme</strong> girmiş olabilir.
+            Siz inşaata başlayın, biz sayfayı arıyoruz.
+        </p>
+
+        <div class="game-wrapper">
+            <div class="score-board" id="currentScore">0</div>
+            <canvas id="gameCanvas"></canvas>
+
+            <div id="startScreen" class="game-overlay">
+                <i class="fa-solid fa-building fa-2x mb-3" style="color:#f1c40f;"></i>
+                <h4 style="font-family: 'Press Start 2P'; font-size:1.1rem; line-height:1.5;">KULE DİKMECE</h4>
+                <button class="btn-game" onclick="startGame()">BAŞLA</button>
+                <small class="mt-3 text-white-50" style="font-size: 0.7rem;">Başlamak için SPACE veya ekrana dokun</small>
+            </div>
+
+            <div id="gameOverScreen" class="game-overlay hidden">
+                <h4 class="text-danger" style="font-family: 'Press Start 2P'; font-size:1.5rem;">YIKILDI!</h4>
+                <p class="mt-2 mb-0">Kat Sayısı</p>
+                <span id="finalScore" class="fw-bold text-warning" style="font-size:2.5rem; font-family:'Press Start 2P'">0</span>
+                <button class="btn-game" onclick="resetGame()">TEKRAR</button>
+            </div>
+        </div>
+
+        <div class="mt-3 gap-2 d-flex justify-content-center btn-action-group">
+            <a href="/" class="btn btn-primary shadow-sm py-2 px-4">
+                <i class="fa-solid fa-house me-2"></i> Anasayfa
+            </a>
+            <a href="javascript:history.back()" class="btn btn-outline-secondary shadow-sm py-2 px-4">
+                <i class="fa-solid fa-arrow-left me-2"></i> Geri
+            </a>
+        </div>
+
+        <div class="mt-4 text-muted small" style="opacity: 0.7;">
+            Hata Kodu: <b>404</b>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = 450;
+        canvas.height = 600;
+
+        // --- AYARLAR ---
+        let initialSpeed = 2.0; // Alan büyüdüğü için başlangıç hızı biraz artırıldı
+        let speedIncrement = 0.15;
+        let maxSpeed = 13.0;
+        // ----------------
+
+        let score = 0;
+        let isGameOver = false;
+        let isPlaying = false;
+        let speed = initialSpeed;
+
+        // Blok boyutlarını yeni çözünürlüğe göre oranladık
+        const blockHeight = 40; // Eskisi 25'ti
+        const startWidth = 220; // Eskisi 150'ydi
+
+        let blocks = [];
+        let currentBlock = null;
+        let direction = 1;
+        let animationId;
+
+        const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6'];
+
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            score = 0;
+            speed = initialSpeed;
+            direction = 1;
+            document.getElementById('currentScore').innerText = score;
+
+            blocks = [];
+            // İlk sabit blok
+            blocks.push({
+                x: (canvas.width - startWidth) / 2,
+                y: canvas.height - 50,
+                width: startWidth,
+                color: '#ecf0f1'
+            });
+
+            spawnBlock();
+            isPlaying = true;
+            isGameOver = false;
+            update();
+        }
+
+        function spawnBlock() {
+            const prevBlock = blocks[blocks.length - 1];
+            const color = colors[score % colors.length];
+
+            currentBlock = {
+                x: 0,
+                y: prevBlock.y - blockHeight,
+                width: prevBlock.width,
+                color: color
+            };
+
+            // Bloklar tepeye yaklaştıysa aşağı kaydır (Kamera efekti)
+            if (currentBlock.y < 100) {
+                blocks.forEach(b => b.y += blockHeight);
+                currentBlock.y += blockHeight;
+            }
+        }
+
+        function update() {
+            if (!isPlaying) return;
+
+            currentBlock.x += speed * direction;
+            if (currentBlock.x + currentBlock.width > canvas.width) direction = -1;
+            if (currentBlock.x < 0) direction = 1;
+
+            draw();
+            animationId = requestAnimationFrame(update);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            blocks.forEach(b => {
+                ctx.fillStyle = b.color;
+                ctx.fillRect(b.x, b.y, b.width, blockHeight);
+                // Gölge efekti
+                ctx.fillStyle = "rgba(0,0,0,0.1)";
+                ctx.fillRect(b.x, b.y + blockHeight - 8, b.width, 8);
+            });
+
+            if (currentBlock) {
+                ctx.fillStyle = currentBlock.color;
+                ctx.fillRect(currentBlock.x, currentBlock.y, currentBlock.width, blockHeight);
+                ctx.fillStyle = "rgba(0,0,0,0.1)";
+                ctx.fillRect(currentBlock.x, currentBlock.y + blockHeight - 8, currentBlock.width, 8);
+            }
+        }
+
+        function placeBlock() {
+            if (!isPlaying) return;
+
+            const prevBlock = blocks[blocks.length - 1];
+            const dist = currentBlock.x - prevBlock.x;
+            const absDist = Math.abs(dist);
+
+            // Eğer blok tamamen boşa düştüyse
+            if (absDist >= currentBlock.width) {
+                gameOver();
+                return;
+            }
+
+            // Yeni genişlik ve pozisyon hesapla
+            const newWidth = currentBlock.width - absDist;
+            const newX = dist > 0 ? currentBlock.x : prevBlock.x;
+
+            currentBlock.width = newWidth;
+            currentBlock.x = newX;
+            blocks.push(currentBlock);
+
+            score++;
+            document.getElementById('currentScore').innerText = score;
+
+            if (speed < maxSpeed) speed += speedIncrement;
+
+            spawnBlock();
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            cancelAnimationFrame(animationId);
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = score;
+        }
+
+        function resetGame() {
+            startGame();
+        }
+
+        // --- KONTROLLER --- //
+
+        // 1. Mouse Tıklama
+        canvas.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            handleInput();
+        });
+
+        // 2. Dokunmatik (Mobil) Kontrol
+        canvas.addEventListener('touchstart', (e) => {
+            if(e.cancelable) e.preventDefault();
+            handleInput();
+        }, { passive: false });
+
+        // 3. Klavye (Boşluk Tuşu)
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                handleInput();
+            }
+        });
+
+        // GÜNCELLEME: Ortak Girdi Yöneticisi (Space ile başlatma eklendi)
+        function handleInput() {
+            if (!isPlaying) {
+                // Eğer Start ekranı görünüyorsa oyunu başlat
+                if (!document.getElementById('startScreen').classList.contains('hidden')) {
+                    startGame();
+                }
+                // Eğer Game Over ekranı görünüyorsa oyunu yeniden başlat
+                else if (!document.getElementById('gameOverScreen').classList.contains('hidden')) {
+                    resetGame();
+                }
+            } else {
+                // Oyun devam ediyorsa blok yerleştir
+                placeBlock();
+            }
+        }
+
+        // İlk ekranı çiz (Sayfa yüklendiğinde boş kalmasın)
+        window.onload = function() {
+             ctx.fillStyle = '#ecf0f1';
+             // Ortalamak için dinamik hesaplama
+             ctx.fillRect((canvas.width - startWidth) / 2, canvas.height - 50, startWidth, blockHeight);
+        };
+
+    </script>
+</body>
+</html>
