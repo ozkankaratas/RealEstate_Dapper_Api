@@ -1,0 +1,535 @@
+﻿@{
+    ViewData["Title"] = "Hata - Beklenmedik Durum";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .error-container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Arkaplan Yıldız Efekti (Saf CSS) */
+        .stars-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle infinite ease-in-out;
+        }
+
+        /* İkon ve Başlıklar */
+        .astro-icon {
+            font-size: 5rem;
+            color: #a29bfe;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: float-astro 6s ease-in-out infinite;
+        }
+
+        .shadow-pulse {
+            width: 50px;
+            height: 10px;
+            background: rgba(162, 155, 254, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            animation: pulse-purple 3s infinite;
+        }
+
+        h1 {
+            font-family: 'Audiowide', cursive;
+            color: #a29bfe;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        p.lead {
+            color: #dfe6e9;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        /* --- OYUN ALANI --- */
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            max-height: 50vh;
+            margin: 0 auto 20px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(162, 155, 254, 0.1);
+            background: #000;
+            border: 2px solid #6c5ce7;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            touch-action: none;
+            cursor: none;
+        }
+
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(9, 10, 15, 0.85);
+            color: #a29bfe;
+            z-index: 20;
+            transition: opacity 0.3s;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Skor (Süre) */
+        .score-board {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            color: #fff;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .btn-game {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-weight: bold;
+            font-family: 'Audiowide', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+            margin-top: 15px;
+            border-radius: 50px;
+            transition: transform 0.2s;
+        }
+
+            .btn-game:active {
+                transform: scale(0.95);
+            }
+
+        /* Buton Grubu */
+        .btn-action-group .btn {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* Mobil */
+        @@media (max-width: 576px) {
+            .game-wrapper {
+                max-width: 340px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn-action-group {
+                flex-direction: column;
+            }
+
+                .btn-action-group .btn {
+                    width: 100%;
+                }
+        }
+
+        @@keyframes float-astro {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
+        }
+        @@keyframes twinkle {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+        @@keyframes pulse-purple {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="starsContainer" class="stars-bg"></div>
+
+    <div class="error-container">
+
+        <div class="astro-icon">
+            <i class="fa-solid fa-user-astronaut"></i>
+        </div>
+        <div class="shadow-pulse"></div>
+
+        <h1>Houston, Bir Sorunumuz Var!</h1>
+        <p class="lead">
+            Beklenmedik bir hata oluştu ve rotadan saptık. <br>
+            Biz koordinatları hesaplarken meteorlardan kaçın!
+        </p>
+
+        <div class="game-wrapper">
+            <div class="score-board">SÜRE: <span id="currentScore">0.0</span>s</div>
+            <canvas id="spaceCanvas"></canvas>
+
+            <div id="startScreen" class="game-overlay">
+                <i class="fa-solid fa-rocket fa-2x mb-3" style="color:#a29bfe;"></i>
+                <h4 style="font-family: 'Audiowide'; margin-bottom:15px;">METEOR YAĞMURU</h4>
+                <p style="font-size: 0.8rem; color:#dfe6e9;">
+                    Mouse veya parmağınla roketi yönet.<br>Çarpmadan kaç!
+                </p>
+                <button class="btn-game" onclick="startGame()">KALKIŞ YAP</button>
+            </div>
+
+            <div id="gameOverScreen" class="game-overlay hidden">
+                <h4 class="text-danger" style="font-family: 'Audiowide'; color:#ff7675 !important;">HASAR KRİTİK!</h4>
+                <p class="mt-2 mb-0" style="font-size:0.9rem;">Hayatta Kalma Süresi</p>
+                <span id="finalScore" style="font-size:1.8rem; font-family:'Press Start 2P'; color: #fff; margin: 10px 0;">0.0s</span>
+                <button class="btn-game" onclick="resetGame()" style="background: #ff7675;">
+                    TEKRAR DENE
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-3 gap-2 d-flex justify-content-center btn-action-group">
+            <button onclick="window.location.reload()" class="btn btn-outline-light shadow-sm py-2 px-4">
+                <i class="fa-solid fa-rotate-right me-2"></i> Yenile
+            </button>
+            <a href="/" class="btn btn-primary shadow-sm py-2 px-4" style="background-color: #6c5ce7; border-color:#6c5ce7;">
+                <i class="fa-solid fa-shuttle-space me-2"></i> Üsse Dön
+            </a>
+        </div>
+
+        <div class="mt-4 text-muted small" style="opacity: 0.5;">
+            Hata Kodu: <b>Bilinmeyen Hata</b>
+        </div>
+    </div>
+
+    <script>
+        // --- YILDIZ EFEKTİ ---
+        const starContainer = document.getElementById('starsContainer');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = Math.random() * 3 + 'px';
+            star.style.height = star.style.width;
+            star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            starContainer.appendChild(star);
+        }
+
+        // --- OYUN ---
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = 450;
+        canvas.height = 450;
+
+        let isPlaying = false;
+        let animationId;
+        let startTime;
+        let score = 0;
+
+        // Oyuncu
+        let player = { x: canvas.width / 2, y: canvas.height / 2, size: 10, speed: 5 };
+        let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+
+        // Meteorlar
+        let asteroids = [];
+        let spawnRate = 60; // Frame başına spawn (Düşük = daha sık)
+        let frameCount = 0;
+        let difficultyMultiplier = 1;
+
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+
+            asteroids = [];
+            player.x = canvas.width / 2;
+            player.y = canvas.height / 2;
+            mouse.x = player.x; // Mouse'u oyuncunun olduğu yerde varsay
+            mouse.y = player.y;
+
+            startTime = Date.now();
+            score = 0;
+            difficultyMultiplier = 1;
+            frameCount = 0;
+
+            isPlaying = true;
+            update();
+        }
+
+        function spawnAsteroid() {
+            const size = Math.random() * 20 + 10;
+            let x, y, dx, dy;
+
+            // Rastgele bir kenardan doğsun
+            const edge = Math.floor(Math.random() * 4);
+            // 0: Üst, 1: Sağ, 2: Alt, 3: Sol
+
+            if (edge === 0) { // Üst
+                x = Math.random() * canvas.width;
+                y = -size;
+                dy = Math.random() * 2 + 1;
+                dx = (Math.random() - 0.5) * 2;
+            } else if (edge === 1) { // Sağ
+                x = canvas.width + size;
+                y = Math.random() * canvas.height;
+                dx = -(Math.random() * 2 + 1);
+                dy = (Math.random() - 0.5) * 2;
+            } else if (edge === 2) { // Alt
+                x = Math.random() * canvas.width;
+                y = canvas.height + size;
+                dy = -(Math.random() * 2 + 1);
+                dx = (Math.random() - 0.5) * 2;
+            } else { // Sol
+                x = -size;
+                y = Math.random() * canvas.height;
+                dx = Math.random() * 2 + 1;
+                dy = (Math.random() - 0.5) * 2;
+            }
+
+            // Hız zorlukla artsın
+            dx *= difficultyMultiplier;
+            dy *= difficultyMultiplier;
+
+            asteroids.push({ x, y, dx, dy, size });
+        }
+
+        function update() {
+            if (!isPlaying) return;
+
+            // Süre Hesapla
+            score = ((Date.now() - startTime) / 1000).toFixed(1);
+            document.getElementById('currentScore').innerText = score + "s";
+
+            // Zorluk artışı (Her 10 saniyede bir hızlan)
+            difficultyMultiplier = 1 + (score / 20);
+
+            // Oyuncu Hareketi (Mouse'a doğru süzülme - LERP)
+            // Mobilde doğrudan parmağın altında olsun
+            player.x += (mouse.x - player.x) * 0.1;
+            player.y += (mouse.y - player.y) * 0.1;
+
+            // Sınırları kontrol et
+            if(player.x < 10) player.x = 10;
+            if(player.x > canvas.width - 10) player.x = canvas.width - 10;
+            if(player.y < 10) player.y = 10;
+            if(player.y > canvas.height - 10) player.y = canvas.height - 10;
+
+            // Meteor Spawn
+            frameCount++;
+            let currentSpawnRate = Math.max(10, 60 - Math.floor(score)); // Zamanla daha sık gelsin
+            if (frameCount % currentSpawnRate === 0) {
+                spawnAsteroid();
+            }
+
+            draw();
+            animationId = requestAnimationFrame(update);
+        }
+
+        function draw() {
+            // Arkaplanı hafifçe sil (Motion blur etkisi için opaklık kullanabiliriz ama netlik için tam siliyoruz)
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid Çizimi (Derinlik algısı için)
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            const gridSize = 50;
+            // Hareket efekti vermek için grid offsetlenebilir ama basit tutalım
+            for (let x = 0; x <= canvas.width; x += gridSize) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y <= canvas.height; y += gridSize) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // Oyuncu (Üçgen Roket)
+            ctx.save();
+            ctx.translate(player.x, player.y);
+            // Mouse'a göre dönmesi için açı hesapla
+            const angle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
+            ctx.rotate(angle);
+
+            ctx.beginPath();
+            ctx.moveTo(15, 0);
+            ctx.lineTo(-10, 8);
+            ctx.lineTo(-10, -8);
+            ctx.closePath();
+            ctx.fillStyle = '#6c5ce7';
+            ctx.fill();
+
+            // Roket Arkası Ateş
+            ctx.beginPath();
+            ctx.moveTo(-10, 0);
+            ctx.lineTo(-20 - Math.random()*10, 0); // Titreşen ateş
+            ctx.strokeStyle = '#e17055';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.restore();
+
+            // Meteorlar
+            for (let i = 0; i < asteroids.length; i++) {
+                let a = asteroids[i];
+                a.x += a.dx;
+                a.y += a.dy;
+
+                // Çizim
+                ctx.beginPath();
+                ctx.arc(a.x, a.y, a.size, 0, Math.PI * 2);
+                ctx.fillStyle = '#b2bec3';
+                ctx.fill();
+                // Basit gölge/krater efekti
+                ctx.beginPath();
+                ctx.arc(a.x - a.size*0.3, a.y - a.size*0.3, a.size/3, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                ctx.fill();
+
+                // Çarpışma Kontrolü (Basit Mesafe)
+                const dist = Math.hypot(player.x - a.x, player.y - a.y);
+                if (dist < player.size + a.size) {
+                    gameOver();
+                }
+
+                // Ekrandan çıkanları sil (Performans)
+                if (a.x < -50 || a.x > canvas.width + 50 || a.y < -50 || a.y > canvas.height + 50) {
+                    asteroids.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            cancelAnimationFrame(animationId);
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = score + "s";
+        }
+
+        function resetGame() {
+            startGame();
+        }
+
+        // --- GİRDİLER ---
+
+        function handleInput(x, y) {
+            // Mouse koordinatlarını canvas içine uyarla
+            const rect = canvas.getBoundingClientRect();
+            // Scale faktörünü hesaba kat (CSS ile canvas boyutu değişirse diye)
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            mouse.x = (x - rect.left) * scaleX;
+            mouse.y = (y - rect.top) * scaleY;
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            handleInput(e.clientX, e.clientY);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            handleInput(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: false });
+
+        // Space tuşu ile başlat
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (!isPlaying) {
+                     if (!document.getElementById('startScreen').classList.contains('hidden')) startGame();
+                     else if (!document.getElementById('gameOverScreen').classList.contains('hidden')) resetGame();
+                }
+            }
+        });
+
+        // İlk Yükleme
+        window.onload = function() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = '#6c5ce7';
+            ctx.font = "20px 'Audiowide'";
+            ctx.textAlign = "center";
+            ctx.fillText("BEKLEMEDE...", canvas.width/2, canvas.height/2);
+        };
+
+    </script>
+</body>
+</html>

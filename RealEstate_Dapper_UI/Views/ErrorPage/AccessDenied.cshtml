@@ -1,0 +1,502 @@
+﻿@{
+    ViewData["Title"] = "Erişim Reddedildi";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #1a1a2e; /* Koyu Lacivert Zemin */
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            overscroll-behavior: none;
+        }
+
+        .error-container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Arkaplan Deseni (Kilitler) */
+        .security-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#16213e 15%, transparent 16%), radial-gradient(#16213e 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* İkon ve Başlıklar */
+        .lock-icon {
+            font-size: 5rem;
+            color: #00d2d3; /* Neon Cyan */
+            margin-bottom: 10px;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px rgba(0, 210, 211, 0.5));
+            animation: float-lock 3s ease-in-out infinite;
+        }
+
+        .shadow-pulse {
+            width: 60px;
+            height: 10px;
+            background: rgba(0, 210, 211, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            animation: pulse-cyan 3s infinite;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        p.lead {
+            color: #a4b0be;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- OYUN ALANI (KASA) --- */
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px; /* Kareye yakın bir form daha iyi */
+            margin: 0 auto 20px auto;
+            border-radius: 50%; /* Yuvarlak Çerçeve */
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0,0,0,0.8);
+            background: #0f0f1a;
+            border: 8px solid #2f3542;
+            aspect-ratio: 1 / 1;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(15, 15, 26, 0.92);
+            color: #00d2d3;
+            z-index: 10;
+            transition: opacity 0.3s;
+            padding: 40px;
+            text-align: center;
+            border-radius: 50%; /* Overlay de yuvarlak */
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .btn-game {
+            background: transparent;
+            color: #00d2d3;
+            border: 2px solid #00d2d3;
+            padding: 12px 25px;
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 210, 211, 0.2);
+            margin-top: 15px;
+            text-transform: uppercase;
+            border-radius: 30px;
+            transition: all 0.2s;
+        }
+
+            .btn-game:hover {
+                background: #00d2d3;
+                color: #1a1a2e;
+                box-shadow: 0 0 30px rgba(0, 210, 211, 0.6);
+            }
+
+        /* Buton Grubu */
+        .btn-action-group .btn {
+            border-radius: 50px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #00d2d3;
+            border-color: #00d2d3;
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+            .btn-primary:hover {
+                background-color: #01a3a4;
+                border-color: #01a3a4;
+                color: #fff;
+            }
+
+        .btn-outline-light {
+            color: #a4b0be;
+            border-color: #57606f;
+        }
+
+            .btn-outline-light:hover {
+                background-color: #57606f;
+                color: #fff;
+            }
+
+        /* Mobil Düzenlemeler */
+        @@media (max-width: 576px) {
+            .game-wrapper {
+                max-width: 300px;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .btn-action-group {
+                flex-direction: column;
+            }
+
+                .btn-action-group .btn {
+                    width: 100%;
+                }
+        }
+
+        @@keyframes float-lock {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @@keyframes pulse-cyan {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="security-bg"></div>
+
+    <div class="error-container">
+
+        <div class="lock-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="shadow-pulse"></div>
+
+        <h1>GIRIS REDDEDILDI ✋</h1>
+        <p class="lead">
+            Bu bölgeye girmek için kartınızın yetkisi yetmiyor gibi. <br>
+            Ya doğru hesapla giriş yapın ya da <strong>güvenlik kilidini</strong> kırmayı deneyin.
+        </p>
+
+        <div class="game-wrapper">
+            <canvas id="lockCanvas"></canvas>
+
+            <div id="startScreen" class="game-overlay">
+                <i class="fa-solid fa-fingerprint fa-3x mb-3" style="color: #00d2d3;"></i>
+                <h4 style="font-family: 'Orbitron'; font-size:1.1rem; letter-spacing:1px; margin-bottom:15px;">
+                    KİLİT KIRICI
+                </h4>
+                <p style="font-size: 0.75rem; color:#a4b0be;">
+                    Hedef bölgeye gelince<br>tıklayın veya SPACE'e basın.
+                </p>
+                <button class="btn-game" onclick="startGame()">HACKLE</button>
+            </div>
+
+            <div id="gameOverScreen" class="game-overlay hidden">
+                <i class="fa-solid fa-triangle-exclamation fa-2x mb-2 text-danger"></i>
+                <h4 class="text-danger" style="font-family: 'Orbitron'; font-size:1.2rem; text-shadow:0 0 10px rgba(220, 53, 69, 0.5);">ALARM ÇALDI!</h4>
+                <p class="mt-2 mb-0" style="font-size:0.8rem; color:#a4b0be;">Açılan Kilit</p>
+                <span id="finalScore" style="font-size:2.5rem; font-family:'Press Start 2P'; color: #fff;">0</span>
+                <button class="btn-game" onclick="resetGame()" style="border-color:#dc3545; color:#dc3545;">
+                    TEKRAR DENE
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-3 gap-2 d-flex justify-content-center btn-action-group">
+            <a href="/Account/Login" class="btn btn-primary shadow-sm py-2 px-4">
+                <i class="fa-solid fa-right-to-bracket me-2"></i> Giriş Yap
+            </a>
+            <a href="javascript:history.back()" class="btn btn-outline-light shadow-sm py-2 px-4">
+                <i class="fa-solid fa-arrow-left me-2"></i> Geri Dön
+            </a>
+        </div>
+
+        <div class="mt-4 text-muted small" style="opacity: 0.5;">
+            Hata Kodu: <b>403 Forbidden / 401 Unauthorized</b>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('lockCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Canvas Boyutları (Yüksek çözünürlük için)
+        canvas.width = 400;
+        canvas.height = 400;
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 140; // Kilit halkası yarıçapı
+
+        // Oyun Değişkenleri
+        let level = 1;
+        let isPlaying = false;
+        let animationId;
+
+        // Kilit Mekaniği
+        let currentAngle = 0; // İmlecin açısı (Radyan)
+        let speed = 0.02; // Dönüş hızı
+        let targetAngle = 0; // Hedefin merkez açısı
+        let targetWidth = 0.6; // Hedefin genişliği (Radyan)
+        let clockwise = true; // Dönüş yönü
+
+        // Renkler
+        const colorBg = '#0f0f1a';
+        const colorRing = '#2f3542';
+        const colorCursor = '#ff4757';
+        const colorTarget = '#00d2d3'; // Neon Cyan
+        const colorSuccess = '#2ecc71';
+
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+
+            level = 1;
+            resetLevel();
+            isPlaying = true;
+            update();
+        }
+
+        function resetLevel() {
+            // Her seviyede rastgele bir hedef belirle
+            targetAngle = Math.random() * (Math.PI * 2);
+
+            // Kafa karışıklığı olmasın diye imleci hedefin uzağına koy
+            currentAngle = (targetAngle + Math.PI) % (Math.PI * 2);
+
+            // Seviye arttıkça zorlaşsın
+            // 1. Hedef küçülür
+            targetWidth = Math.max(0.15, 0.6 - (level * 0.03));
+
+            // 2. Hız artar
+            speed = 0.03 + (level * 0.005);
+            if(speed > 0.15) speed = 0.15; // Max hız
+
+            // 3. Yön değişir (Her seviyede tersine döner)
+            clockwise = level % 2 !== 0;
+        }
+
+        function update() {
+            if(!isPlaying) return;
+
+            // Açıyı güncelle
+            if (clockwise) currentAngle += speed;
+            else currentAngle -= speed;
+
+            // 0-2PI aralığında tut
+            if (currentAngle > Math.PI * 2) currentAngle -= Math.PI * 2;
+            if (currentAngle < 0) currentAngle += Math.PI * 2;
+
+            draw();
+            animationId = requestAnimationFrame(update);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Dış Halka (Sabit)
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = colorRing;
+            ctx.lineWidth = 20;
+            ctx.stroke();
+
+            // 2. Hedef Bölge
+            ctx.beginPath();
+            // Arc çizimi (start, end)
+            ctx.arc(centerX, centerY, radius, targetAngle - targetWidth/2, targetAngle + targetWidth/2);
+            ctx.strokeStyle = colorTarget;
+            ctx.lineWidth = 20;
+            // Parlama efekti
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = colorTarget;
+            ctx.stroke();
+            ctx.shadowBlur = 0; // Reset
+
+            // 3. Dönen İmleç (Top)
+            let cursorX = centerX + Math.cos(currentAngle) * radius;
+            let cursorY = centerY + Math.sin(currentAngle) * radius;
+
+            ctx.beginPath();
+            ctx.arc(cursorX, cursorY, 12, 0, Math.PI * 2);
+            ctx.fillStyle = colorCursor;
+            ctx.fill();
+            // İmleç çizgisi (Merkeze doğru)
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(cursorX, cursorY);
+            ctx.strokeStyle = "rgba(255, 71, 87, 0.3)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // 4. Ortadaki Bilgi (Level / Kilit)
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 40px 'Orbitron'";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(level, centerX, centerY);
+
+            ctx.fillStyle = "#a4b0be";
+            ctx.font = "14px 'Segoe UI'";
+            ctx.fillText("KİLİT SEVİYESİ", centerX, centerY + 35);
+        }
+
+        function checkUnlock() {
+            if(!isPlaying) return;
+
+            // Açı farkını hesapla
+            let diff = Math.abs(currentAngle - targetAngle);
+            // Dairesel fark düzeltmesi (örn: 359 derece ile 1 derece arasındaki fark 2'dir)
+            if (diff > Math.PI) diff = (Math.PI * 2) - diff;
+
+            // Eğer fark, hedef genişliğinin yarısından küçükse (içindeyse)
+            if (diff <= targetWidth / 2) {
+                // BAŞARILI
+                level++;
+                pulseSuccess();
+                resetLevel();
+            } else {
+                // BAŞARISIZ
+                gameOver();
+            }
+        }
+
+        function pulseSuccess() {
+            // Başarılı olduğunda ekran bir anlık yeşil parlasın
+            const originalColor = colorTarget;
+            // Basit bir görsel feedback için canvas'ı bir anlık boyayabiliriz ama şimdilik draw içinde hallediyoruz
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            cancelAnimationFrame(animationId);
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = level - 1;
+            drawGameOverState();
+        }
+
+        function drawGameOverState() {
+             // Kaybedince kırmızı olsun
+             ctx.strokeStyle = '#dc3545';
+             ctx.lineWidth = 20;
+             ctx.stroke();
+        }
+
+        function resetGame() {
+            startGame();
+        }
+
+        // --- KONTROLLER ---
+
+        // 1. Ortak Girdi Yöneticisi
+        function handleInput(e) {
+            // Varsayılan browser aksiyonlarını engelle (scroll vs)
+            if(e.type === 'keydown' && e.code === 'Space') e.preventDefault();
+            if(e.type === 'touchstart') e.preventDefault();
+
+            if (!isPlaying) {
+                if (!document.getElementById('startScreen').classList.contains('hidden')) startGame();
+                else if (!document.getElementById('gameOverScreen').classList.contains('hidden')) resetGame();
+            } else {
+                checkUnlock();
+            }
+        }
+
+        // Event Listener'lar
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') handleInput(e);
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            handleInput(e);
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+            handleInput(e);
+        }, { passive: false });
+
+
+        // Sayfa Yüklendiğinde
+        window.onload = function() {
+            // Statik bir görüntü çiz
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = colorRing;
+            ctx.lineWidth = 20;
+            ctx.stroke();
+
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 20px 'Orbitron'";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("LOCKED", centerX, centerY);
+        };
+
+    </script>
+</body>
+</html>

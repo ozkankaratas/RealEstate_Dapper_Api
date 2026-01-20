@@ -1,0 +1,525 @@
+﻿@{
+    ViewData["Title"] = "500 - Sunucu Hatası";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #fce4e4; /* Hafif kırmızımsı zemin */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            overscroll-behavior: none;
+            color: #2c3e50;
+        }
+
+        .error-container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Arkaplana Devre Kartı Deseni */
+        .circuit-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* İkon ve Başlıklar */
+        .server-icon {
+            font-size: 5rem;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .spark {
+            position: absolute;
+            color: #f1c40f;
+            font-size: 1.5rem;
+            top: 0;
+            right: -10px;
+            animation: flash 0.5s infinite alternate;
+        }
+
+        .shadow-pulse {
+            width: 60px;
+            height: 15px;
+            background: rgba(231, 76, 60, 0.3);
+            border-radius: 50%;
+            margin: -10px auto 20px auto;
+            animation: pulse-red 2s infinite;
+        }
+
+        h1 {
+            font-weight: 800;
+            color: #c0392b;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p.lead {
+            color: #576574;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- OYUN ALANI (RETRO KONSOL) --- */
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto 20px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            background: #000;
+            border: 4px solid #34495e;
+            aspect-ratio: 4 / 3; /* Eski monitör oranı */
+        }
+
+            /* CRT Ekran Efekti (Çizgiler) */
+            .game-wrapper::after {
+                content: " ";
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+                z-index: 2;
+                background-size: 100% 2px, 3px 100%;
+                pointer-events: none;
+            }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: #0f0f0f;
+            touch-action: none;
+        }
+
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(15, 15, 15, 0.9);
+            color: #2ecc71; /* Matrix yeşili */
+            z-index: 10;
+            transition: opacity 0.3s;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Skor Tablosu */
+        .score-board {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            color: #2ecc71;
+            z-index: 5;
+            text-shadow: 0 0 5px #2ecc71;
+        }
+
+        .btn-game {
+            background: transparent;
+            color: #2ecc71;
+            border: 2px solid #2ecc71;
+            padding: 12px 25px;
+            font-weight: bold;
+            font-family: 'Press Start 2P', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+            margin-top: 15px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+            .btn-game:hover {
+                background: #2ecc71;
+                color: #000;
+                box-shadow: 0 0 20px rgba(46, 204, 113, 0.6);
+            }
+
+        /* Mobil Düzenlemeler */
+        @@media (max-width: 576px) {
+            .game-wrapper {
+                max-width: 340px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn-action-group {
+                flex-direction: column;
+            }
+
+                .btn-action-group .btn {
+                    width: 100%;
+                }
+        }
+
+        @@keyframes flash {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+        @@keyframes pulse-red {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="circuit-bg"></div>
+
+    <div class="error-container">
+
+        <div class="server-icon">
+            <i class="fa-solid fa-server"></i>
+            <i class="fa-solid fa-bolt spark"></i>
+        </div>
+        <div class="shadow-pulse"></div>
+
+        <h1>Sunucularımız Biraz Terledi</h1>
+        <p class="lead">
+            Arka planda kablolar birbirine dolanmış olabilir. <br>
+            Biz müdahale ederken siz <strong>Veri Kurtarma Botu</strong>'nu yönetin.
+        </p>
+
+        <div class="game-wrapper">
+            <div class="score-board">BYTE: <span id="currentScore">0</span></div>
+            <canvas id="snakeCanvas"></canvas>
+
+            <div id="startScreen" class="game-overlay">
+                <i class="fa-solid fa-terminal fa-2x mb-3"></i>
+                <h4 style="font-family: 'Press Start 2P'; font-size:1rem; line-height:1.6; margin-bottom:20px;">
+                    SİSTEM BAŞLATILIYOR...
+                </h4>
+                <p style="font-size: 0.8rem; font-family: 'Fira Code', monospace; margin-bottom:5px;">
+                    <i class="fa-solid fa-keyboard"></i> Yön Tuşları
+                </p>
+                <p style="font-size: 0.8rem; font-family: 'Fira Code', monospace;">
+                    <i class="fa-solid fa-hand-pointer"></i> Ekranda Kaydır
+                </p>
+
+                <button class="btn-game" onclick="startGame()">BAĞLAN</button>
+                <small class="mt-3" style="font-size: 0.6rem; opacity: 0.7;">SPACE ile başla</small>
+            </div>
+
+            <div id="gameOverScreen" class="game-overlay hidden">
+                <h4 class="text-danger" style="font-family: 'Press Start 2P'; font-size:1.2rem; color:#e74c3c !important; text-shadow:0 0 5px #e74c3c;">BAĞLANTI KOPTU!</h4>
+                <p class="mt-3 mb-1" style="font-family: 'Fira Code'">Kurtarılan Veri</p>
+                <span id="finalScore" style="font-size:2rem; font-family:'Press Start 2P'; color: #fff;">0</span>
+                <button class="btn-game" onclick="resetGame()" style="border-color:#e74c3c; color:#e74c3c; margin-top:20px;">
+                    YENİDEN DENE
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-3 gap-2 d-flex justify-content-center btn-action-group">
+            <button onclick="window.location.reload()" class="btn btn-danger shadow-sm py-2 px-4">
+                <i class="fa-solid fa-rotate-right me-2"></i> Yenile
+            </button>
+
+            <a href="/" class="btn btn-outline-secondary shadow-sm py-2 px-4">
+                <i class="fa-solid fa-house me-2"></i> Anasayfa
+            </a>
+        </div>
+
+        <div class="mt-4 text-muted small" style="opacity: 0.7;">
+            Hata Kodu: <b>500 Internal Server Error</b>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('snakeCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Canvas Boyutları
+        canvas.width = 640;
+        canvas.height = 480;
+
+        // Oyun Ayarları
+        const gridSize = 20;
+        const tileCountX = canvas.width / gridSize;
+        const tileCountY = canvas.height / gridSize;
+
+        let speed = 100; // ms cinsinden loop hızı
+        let score = 0;
+        let isGameRunning = false;
+        let gameLoopId;
+
+        // Yılan ve Yem
+        let snake = [];
+        let food = { x: 15, y: 15 };
+        let dx = 0;
+        let dy = 0;
+
+        // --- OYUN FONKSİYONLARI ---
+
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+
+            // Sıfırla
+            score = 0;
+            document.getElementById('currentScore').innerText = score;
+            snake = [{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}]; // Başlangıç boyutu 3
+            dx = 1; // Sağa doğru başla
+            dy = 0;
+            speed = 100;
+
+            createFood();
+            isGameRunning = true;
+
+            if(gameLoopId) clearInterval(gameLoopId);
+            gameLoopId = setInterval(gameLoop, speed);
+        }
+
+        function gameLoop() {
+            if(!isGameRunning) return;
+
+            // 1. Yeni Kafa Pozisyonu
+            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+            // 2. Çarpışma Kontrolü (Duvar)
+            if (head.x < 0 || head.x >= tileCountX || head.y < 0 || head.y >= tileCountY) {
+                gameOver();
+                return;
+            }
+
+            // 3. Çarpışma Kontrolü (Kendisi)
+            for (let i = 0; i < snake.length; i++) {
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    gameOver();
+                    return;
+                }
+            }
+
+            // 4. Hareket
+            snake.unshift(head); // Yeni kafayı ekle
+
+            // 5. Yem Yeme
+            if (head.x === food.x && head.y === food.y) {
+                score++;
+                document.getElementById('currentScore').innerText = score;
+                createFood();
+                // Biraz hızlandır
+                if(speed > 50) {
+                    clearInterval(gameLoopId);
+                    speed -= 2;
+                    gameLoopId = setInterval(gameLoop, speed);
+                }
+            } else {
+                snake.pop(); // Yem yemediysen kuyruğu sil
+            }
+
+            draw();
+        }
+
+        function draw() {
+            // Arkaplanı temizle (Siyah)
+            ctx.fillStyle = '#0f0f0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Izgara çizgileri (Retro hissi için hafif görünür)
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            for(let x=0; x<canvas.width; x+=gridSize) {
+                ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke();
+            }
+            for(let y=0; y<canvas.height; y+=gridSize) {
+                ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke();
+            }
+
+            // Yılanı Çiz
+            ctx.fillStyle = '#2ecc71'; // Matrix Yeşili
+            snake.forEach((part, index) => {
+                // Kafa biraz daha açık renk olsun
+                if(index === 0) ctx.fillStyle = '#27ae60';
+                else ctx.fillStyle = '#2ecc71';
+
+                ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
+            });
+
+            // Yemi Çiz (Kırmızı bir "Bug" veya veri paketi)
+            ctx.fillStyle = '#e74c3c';
+            ctx.beginPath();
+            let foodX = food.x * gridSize + gridSize/2;
+            let foodY = food.y * gridSize + gridSize/2;
+            ctx.arc(foodX, foodY, gridSize/2 - 2, 0, 2 * Math.PI);
+            ctx.fill();
+            // Parlama efekti
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#e74c3c";
+            ctx.shadowBlur = 0; // Reset
+        }
+
+        function createFood() {
+            food = {
+                x: Math.floor(Math.random() * tileCountX),
+                y: Math.floor(Math.random() * tileCountY)
+            };
+            // Yılanın üstüne gelmesin
+            snake.forEach(part => {
+                if (part.x === food.x && part.y === food.y) createFood();
+            });
+        }
+
+        function gameOver() {
+            isGameRunning = false;
+            clearInterval(gameLoopId);
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = score;
+        }
+
+        function resetGame() {
+            startGame();
+        }
+
+        // --- KONTROLLER ---
+
+        // 1. Klavye Kontrolleri
+        document.addEventListener('keydown', (e) => {
+            // Space ile Başlat/Reset
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (!isGameRunning) {
+                    if(!document.getElementById('startScreen').classList.contains('hidden')) startGame();
+                    else if(!document.getElementById('gameOverScreen').classList.contains('hidden')) resetGame();
+                }
+                return;
+            }
+
+            // Yön Tuşları (Geri dönüşü engelle)
+            if(!isGameRunning) return;
+
+            switch(e.key) {
+                case 'ArrowUp':
+                    if (dy !== 1) { dx = 0; dy = -1; }
+                    e.preventDefault();
+                    break;
+                case 'ArrowDown':
+                    if (dy !== -1) { dx = 0; dy = 1; }
+                    e.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                    if (dx !== 1) { dx = -1; dy = 0; }
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                    if (dx !== -1) { dx = 1; dy = 0; }
+                    e.preventDefault();
+                    break;
+            }
+        });
+
+        // 2. Dokunmatik (Swipe) Kontrolleri
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        canvas.addEventListener('touchstart', function(e) {
+            if(e.cancelable) e.preventDefault(); // Sayfa kaymasını engelle
+            touchStartX = e.changedTouches[0].pageX;
+            touchStartY = e.changedTouches[0].pageY;
+
+            // Oyun başlamadıysa dokunarak başlat
+            if (!isGameRunning) {
+                if(!document.getElementById('startScreen').classList.contains('hidden')) startGame();
+                else if(!document.getElementById('gameOverScreen').classList.contains('hidden')) resetGame();
+            }
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', function(e) {
+            if(!isGameRunning) return;
+
+            let touchEndX = e.changedTouches[0].pageX;
+            let touchEndY = e.changedTouches[0].pageY;
+
+            handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY);
+        }, { passive: false });
+
+        function handleSwipe(startX, startY, endX, endY) {
+            let diffX = endX - startX;
+            let diffY = endY - startY;
+
+            // Yatay mı Dikey mi daha baskın?
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                // Yatay Hareket
+                if (diffX > 0 && dx !== -1) { dx = 1; dy = 0; } // Sağ
+                else if (diffX < 0 && dx !== 1) { dx = -1; dy = 0; } // Sol
+            } else {
+                // Dikey Hareket
+                if (diffY > 0 && dy !== -1) { dx = 0; dy = 1; } // Aşağı
+                else if (diffY < 0 && dy !== 1) { dx = 0; dy = -1; } // Yukarı
+            }
+        }
+
+        // Sayfa Yüklendiğinde İlk Çizim
+        window.onload = function() {
+            // Siyah ekran
+            ctx.fillStyle = '#0f0f0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // "Sinyal Yok" gibi statik yazı
+            ctx.fillStyle = '#2ecc71';
+            ctx.font = '20px "Press Start 2P"';
+            ctx.textAlign = "center";
+            ctx.fillText("BEKLEMEDE...", canvas.width/2, canvas.height/2);
+        };
+
+    </script>
+</body>
+</html>
