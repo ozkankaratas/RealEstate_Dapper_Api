@@ -1,0 +1,106 @@
+﻿@model List<ResultEstateAgentChartDto>
+<body>
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-light text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">En Fazla İlana Sahip Şehirler</h6>
+                        <a href="" class="text-decoration-none small text-primary">Tümünü Gör</a>
+                    </div>
+                    <canvas id="worldwide-sales"></canvas>
+                </div>
+            </div>
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-light text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">Sales & Revenue</h6>
+                        <a href="" class="text-decoration-none small text-primary">Tümünü Gör</a>
+                    </div>
+                    <canvas id="salse-revenue"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const cityLabels = @Html.Raw(Json.Serialize(Model.Select(x => x.City).ToList()));
+        const ilanSayilariData = @Html.Raw(Json.Serialize(Model.Select(x => x.ProductCount).ToList()));
+
+        const goruntulenmeData = [1200, 950, 800, 450, 600, 300, 400];
+        const basvuruData = [300, 200, 180, 90, 120, 50, 70];
+
+        // --- GRAFİK 1 ---
+        const ctx1 = document.getElementById('worldwide-sales').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: cityLabels,
+                datasets: [{
+                    label: "İlan Sayısı",
+                    data: ilanSayilariData,
+                    backgroundColor: "rgba(0, 156, 255, .7)",
+                    hoverBackgroundColor: "rgba(0, 156, 255, 1)",
+                    borderRadius: 8,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => `${context.raw} Aktif İlan`
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { drawBorder: false, color: '#ded9d9' },
+                        title: { display: true, text: 'İlan Adedi' }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // --- GRAFİK 2 ---
+        const ctx2 = document.getElementById('salse-revenue').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: cityLabels,
+                datasets: [{
+                    label: "Görüntülenme",
+                    data: goruntulenmeData,
+                    backgroundColor: "rgba(0, 156, 255, .2)",
+                    borderColor: "rgba(0, 156, 255, 1)",
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5
+                }, {
+                    label: "Başvuru",
+                    data: basvuruData,
+                    backgroundColor: "rgba(235, 22, 22, .2)",
+                    borderColor: "rgba(235, 22, 22, 1)",
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true, position: 'bottom' }
+                },
+                scales: {
+                    y: { grid: { drawBorder: false, color: '#ded9d9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
