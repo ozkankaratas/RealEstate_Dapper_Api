@@ -1,0 +1,40 @@
+﻿<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-start p-4">
+                <i class="fa fa-home fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Toplam İlan Sayısı</p>
+                    <h6 class="mb-0">@ViewBag.ProductCount</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-start p-4">
+                <i class="fa fa-trophy fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Tüm İlanlarınız</p>
+                    <h6 class="mb-0">@ViewBag.ProductCountByEmployee</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-start p-4">
+                <i class="fa fa-map-marked-alt fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Aktif İlanlarınız</p>
+                    <h6 class="mb-0">@ViewBag.ActiveProductCountByEmployee</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-start p-4">
+                <i class="fa fa-file-invoice-dollar fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">Pasif İlanlarınız</p>
+                    <h6 class="mb-0">@ViewBag.PassiveProductCountByEmployee</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

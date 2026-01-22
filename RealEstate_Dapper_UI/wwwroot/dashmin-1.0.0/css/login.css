@@ -1,0 +1,102 @@
+﻿/* Modern Font */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Arka Plan Görseli ve Kaplama */
+.login-bg {
+    background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+    /* Arka planı biraz karartmak için overlay */
+    .login-bg::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+        z-index: 0;
+    }
+
+/* Glassmorphism (Buzlu Cam) Efekti */
+.glass-card {
+    background: rgba(255, 255, 255, 0.85); /* Hafif transparan beyaz */
+    backdrop-filter: blur(15px); /* Arkadaki görseli buzlar */
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    z-index: 1; /* Overlay üzerinde durması için */
+}
+
+/* Giriş Başlığı */
+.login-header {
+    color: #2c3e50;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Input Alanları */
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    background-color: rgba(255,255,255,0.9);
+    padding-left: 15px;
+}
+
+    .form-control:focus {
+        box-shadow: 0 0 0 4px rgba(0, 156, 255, 0.15);
+        border-color: #009CFF;
+    }
+
+/* Buton Tasarımı */
+.btn-custom {
+    background: linear-gradient(45deg, #009CFF, #007bff);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        background: linear-gradient(45deg, #007bff, #0056b3);
+    }
+
+/* Linkler */
+.link-custom {
+    color: #009CFF;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+    .link-custom:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+/* Animasyon */
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
