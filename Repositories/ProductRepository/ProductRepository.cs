@@ -144,5 +144,17 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
                 return values.ToList();
             }
         }
+
+        public async Task<List<ResultProductWithCategoryDto>> GetLastFiveProductsByIdWithCategoryAsync(int id)
+        {
+            string query = "SELECT TOP(5) p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId Where EmployeeID=@employeeId ORDER BY p.ProductId DESC";
+            var parameters = new DynamicParameters();
+            parameters.Add("employeeId", id);
+            using (var connection = _context.CreateConnection())
+            {
+                var values = await connection.QueryAsync<ResultProductWithCategoryDto>(query, parameters);
+                return values.ToList();
+            }
+        }
     }
 }
