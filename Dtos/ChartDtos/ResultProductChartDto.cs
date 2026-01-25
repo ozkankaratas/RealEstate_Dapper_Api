@@ -1,8 +1,8 @@
 ﻿namespace RealEstate_Dapper_Api.Dtos.ChartDtos
 {
-    public class ResultChartDto
+    public class ResultProductChartDto
     {
         public int ProductCount { get; set; }
-        public string City { get; set; }
+        public int Year { get; set; }
     }
 }

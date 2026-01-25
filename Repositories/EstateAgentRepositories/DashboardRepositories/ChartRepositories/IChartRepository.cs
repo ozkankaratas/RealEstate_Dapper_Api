@@ -5,5 +5,8 @@ namespace RealEstate_Dapper_Api.Repositories.EstateAgentRepositories.DashboardRe
     public interface IChartRepository
     {
         Task<List<ResultChartDto>> GetTopCitiesByProductChart();
+
+        Task<List<ResultProductChartDto>> GetEmployeeProductCountByYearChart(int id);
+
     }
 }

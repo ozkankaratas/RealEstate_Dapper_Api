@@ -20,5 +20,12 @@ namespace RealEstate_Dapper_Api.Controllers
             var result = await _chartRepository.GetTopCitiesByProductChart();
             return Ok(result);
         }
+
+        [HttpGet("EmployeeProductCountByYear")]
+        public async Task<IActionResult> EmployeeProductCountByYear(int id)
+        {
+            var values = await _chartRepository.GetEmployeeProductCountByYearChart(id);
+            return Ok(values);
+        }
     }
 }

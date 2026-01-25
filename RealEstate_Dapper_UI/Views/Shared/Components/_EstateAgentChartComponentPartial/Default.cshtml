@@ -1,4 +1,5 @@
-﻿@model List<ResultEstateAgentChartDto>
+﻿@using RealEstate_Dapper_UI.Dtos.EstateAgentDtos
+@model (List<ResultEstateAgentChartDto> chart1, List<ResultEstateAgentProductChartDto> chart2)
 <body>
     <div class="container-fluid pt-4 px-4">
         <div class="row g-4">
@@ -6,7 +7,6 @@
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h6 class="mb-0">En Fazla İlana Sahip Şehirler</h6>
-                        <a href="" class="text-decoration-none small text-primary">Tümünü Gör</a>
                     </div>
                     <canvas id="worldwide-sales"></canvas>
                 </div>
@@ -14,8 +14,7 @@
             <div class="col-sm-12 col-xl-6">
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Sales & Revenue</h6>
-                        <a href="" class="text-decoration-none small text-primary">Tümünü Gör</a>
+                        <h6 class="mb-0">Yıllara Göre İlanlarınız</h6>
                     </div>
                     <canvas id="salse-revenue"></canvas>
                 </div>
@@ -25,11 +24,11 @@
 
 
     <script>
-        const cityLabels = @Html.Raw(Json.Serialize(Model.Select(x => x.City).ToList()));
-        const ilanSayilariData = @Html.Raw(Json.Serialize(Model.Select(x => x.ProductCount).ToList()));
+        const cityLabels = @Html.Raw(Json.Serialize(Model.Item1?.Select(x => x.City).ToList() ?? new List<string>()));
+        const ilanSayilariData = @Html.Raw(Json.Serialize(Model.Item1?.Select(x => x.ProductCount).ToList() ?? new List<int>()));
 
-        const goruntulenmeData = [1200, 950, 800, 450, 600, 300, 400];
-        const basvuruData = [300, 200, 180, 90, 120, 50, 70];
+        const productData = @Html.Raw(Json.Serialize(Model.Item2?.Select(x => x.ProductCount).ToList() ?? new List<int>()));
+        const yearData = @Html.Raw(Json.Serialize(Model.Item2?.Select(x => x.Year).ToList() ?? new List<int>()));
 
         // --- GRAFİK 1 ---
         const ctx1 = document.getElementById('worldwide-sales').getContext('2d');
@@ -72,21 +71,12 @@
         new Chart(ctx2, {
             type: 'line',
             data: {
-                labels: cityLabels,
+                labels: yearData,
                 datasets: [{
-                    label: "Görüntülenme",
-                    data: goruntulenmeData,
+                    data: productData,
                     backgroundColor: "rgba(0, 156, 255, .2)",
                     borderColor: "rgba(0, 156, 255, 1)",
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 5
-                }, {
-                    label: "Başvuru",
-                    data: basvuruData,
-                    backgroundColor: "rgba(235, 22, 22, .2)",
-                    borderColor: "rgba(235, 22, 22, 1)",
-                    fill: true,
+                    fill: false,
                     tension: 0.4,
                     pointRadius: 5
                 }]
@@ -94,10 +84,17 @@
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: true, position: 'bottom' }
+                    legend: { display: false, position: 'bottom' }
                 },
                 scales: {
-                    y: { grid: { drawBorder: false, color: '#ded9d9' } },
+                    y: {
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0  
+                        },
+                        title: { display: true, text: 'İlan Adedi' },
+                        grid: { drawBorder: false, color: '#ded9d9' }
+                    },
                     x: { grid: { display: false } }
                 }
             }
