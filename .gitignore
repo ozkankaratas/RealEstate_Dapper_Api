@@ -361,3 +361,13 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# wwwroot içindeki tüm .log veya geçici dosyaları engelle
+wwwroot/**/*.log
+
+wwwroot/cityimages/
+wwwroot/employeeimages/
+wwwroot/productImages/
+/RealEstate_Dapper_UI/wwwroot/cityimages
+/RealEstate_Dapper_UI/wwwroot/employeeimages
+/RealEstate_Dapper_UI/wwwroot/productImages
