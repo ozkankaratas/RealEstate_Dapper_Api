@@ -102,7 +102,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 
         public async Task<List<ResultProductWithCategoryDto>> GetLastFiveProductsWithCategoryAsync()
         {
-            string query = "SELECT TOP(5) p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId ORDER BY p.ProductId DESC";
+            string query = "SELECT TOP(5) p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId WHERE p.Status= 1 ORDER BY p.ProductId DESC";
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryAsync<ResultProductWithCategoryDto>(query);
@@ -130,12 +130,27 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             }
         }
 
-        public async Task<List<ResultProductAdvertListWithCategoryByEmployeeDto>> GetProductAdvertListByEmployeeAsyn(int id)
+        public async Task<List<ResultProductAdvertListWithCategoryByEmployeeDto>> GetActiveProductAdvertListByEmployeeAsyn(int id)
         {
-            string query = "SELECT p.ProductID, p.Title, p.Price, p.City, p.District, p.Address, c.CategoryName, p.CoverImage AS CoverImage, p.Type, p.DealOfTheDay, p.Date " +
+            string query = "SELECT p.ProductID, p.Title, p.Price, p.City, p.District, p.Address, c.CategoryName, p.CoverImage AS CoverImage, p.Type, p.DealOfTheDay, p.Status,  p.Date " +
                            "FROM Product p " +
                            "INNER JOIN Category c ON p.ProductCategory = c.CategoryId " +
-                           "WHERE p.EmployeeID = @employeeID";
+                           "WHERE p.EmployeeID = @employeeID AND p.Status = 1";
+            var parameters = new DynamicParameters();
+            parameters.Add("employeeID", id);
+            using (var connection = _context.CreateConnection())
+            {
+                var values = await connection.QueryAsync<ResultProductAdvertListWithCategoryByEmployeeDto>(query, parameters);
+                return values.ToList();
+            }
+        }
+
+        public async Task<List<ResultProductAdvertListWithCategoryByEmployeeDto>> GetPassiveProductAdvertListByEmployeeAsyn(int id)
+        {
+            string query = "SELECT p.ProductID, p.Title, p.Price, p.City, p.District, p.Address, c.CategoryName, p.CoverImage AS CoverImage, p.Type, p.DealOfTheDay, p.Status, p.Date " +
+                           "FROM Product p " +
+                           "INNER JOIN Category c ON p.ProductCategory = c.CategoryId " +
+                           "WHERE p.EmployeeID = @employeeID AND p.Status = 0";
             var parameters = new DynamicParameters();
             parameters.Add("employeeID", id);
             using (var connection = _context.CreateConnection())

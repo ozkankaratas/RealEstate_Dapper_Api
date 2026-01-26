@@ -18,7 +18,7 @@ namespace RealEstate_Dapper_UI.ViewComponents.EstateAgent
         {
             var id = _loginService.GetUserId;
             var client = _httpClientFactory.CreateClient();
-            var responseMessage  = await client.GetAsync("https://localhost:44338/api/Products/ProductAdvertsListByEmployee?id=" + id);
+            var responseMessage  = await client.GetAsync("https://localhost:44338/api/Products/LastFiveProductsByEmployee?id=" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

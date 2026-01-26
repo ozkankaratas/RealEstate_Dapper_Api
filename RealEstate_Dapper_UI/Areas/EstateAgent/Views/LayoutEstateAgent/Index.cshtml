@@ -2,6 +2,7 @@
 @{
     Layout = null;
 }
+
 @* Estate Agent Layout Paneli *@
 
 <!DOCTYPE html>
@@ -22,7 +23,7 @@
 
         <div class="content">
 
-            @await Component.InvokeAsync("_AdminLayoutNavbarComponentPartial")
+            @await Component.InvokeAsync("_EstateAgentNavbarComponentPartial")
             @RenderBody()
             @await Component.InvokeAsync("_AdminLayoutFooterComponentPartial")
         </div>

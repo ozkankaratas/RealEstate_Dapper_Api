@@ -11,6 +11,7 @@
         public string categoryName { get; set; }
         public string coverimage { get; set; }
         public string type { get; set; }
+        public bool status { get; set; }
         public bool dealOfTheDay { get; set; }
         public DateTime date { get; set; }
     }
