@@ -25,7 +25,7 @@ namespace RealEstate_Dapper_Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto)
         {
-            _productRepository.CreateProduct(createProductDto);
+            await _productRepository.CreateProduct(createProductDto);
             return Ok("İlan Başarılı Bir Şekilde Eklendi");
         }
 
@@ -43,10 +43,10 @@ namespace RealEstate_Dapper_Api.Controllers
             return Ok("İlan Başarılı Bir Şekilde Güncellendi");
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetProductById")]
         public async Task<IActionResult> GetProduct(int id)
         {
-            var values = await _productRepository.GetProduct(id);
+            var values = await _productRepository.GetProductById(id);
             return Ok(values);
         }
 
@@ -69,6 +69,20 @@ namespace RealEstate_Dapper_Api.Controllers
         {
             _productRepository.ProductDealOfTheDayStatusChangeToTrue(id);
             return Ok("İlan Günün Fırsatları Arasına Eklendi");
+        }
+
+        [HttpPut("ChangeStatusToFalse/{id}")]
+        public async Task<IActionResult> ChangeStatusToFalse(int id)
+        {
+            _productRepository.ProductStatusChangeToFalse(id);
+            return Ok("İlan Durumu Pasif Olarak Güncellendi");
+        }
+
+        [HttpPut("ChangeStatusToTrue/{id}")]
+        public async Task<IActionResult> ChangeStatusToTrue(int id)
+        {
+            _productRepository.ProductStatusChangeToTrue(id);
+            return Ok("İlan Durumu Aktif Olarak Güncellendi");
         }
 
         [HttpGet("LastFiveProducts")]

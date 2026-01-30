@@ -42,18 +42,18 @@
                                     <td>@item.categoryName</td>
                                     <td>@item.price</td>
                                     <td>@item.type</td>
-                                    <td><a href="/Product/DeleteProduct/@item.productID" class="btn btn-outline-danger">Sil</a></td>
-                                    <td><a href="/Product/UpdateProduct/@item.productID" class="btn btn-outline-success">Güncelle</a></td>
+                                    <td><a href="/EstateAgent/MyAdverts/DeleteAdvert/@item.productID" class="btn btn-outline-danger">Sil</a></td>
+                                    <td><a href="/EstateAgent/MyAdverts/UpdateAdvert/@item.productID" class="btn btn-outline-success">Güncelle</a></td>
                                     <td class="text-center align-middle">
                                         @if (item.status == false)
                                         {
-                                            <a href="/EstateAgent/MyAdverts/ChangeDealOfTheDayStatusToTrue/@item.productID"
+                                            <a href="/EstateAgent/MyAdverts/ChangeStatusToTrue/@item.productID"
                                                class="toggle-switch passive"
                                                title="Aktif Yap"></a>
                                         }
                                         else
                                         {
-                                            <a href="/EstateAgent/MyAdverts/ChangeDealOfTheDayStatusToFalse/@item.productID"
+                                            <a href="/EstateAgent/MyAdverts/ChangeStatusToFalse/@item.productID"
                                                class="toggle-switch active"
                                                title="Pasif Yap"></a>
                                         }
@@ -62,7 +62,7 @@
                             }
                         </tbody>
                     </table>
-                    <a href="/Product/CreateProduct" class="btn btn-outline-info">Yeni İlan Girişi</a>
+                    <a href="/EstateAgent/MyAdverts/CreateAdvert" class="btn btn-outline-info">Yeni İlan Girişi</a>
                 </div>
             </div>
         </div>

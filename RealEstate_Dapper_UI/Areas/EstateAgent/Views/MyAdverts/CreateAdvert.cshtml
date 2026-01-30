@@ -1,7 +1,7 @@
 ﻿@model CreateProductDto
 @{
-    ViewData["Title"] = "CreateProduct";
-    Layout = "~/Views/Admin/Index.cshtml";
+    ViewData["Title"] = "CreateAdvert";
+    Layout = "~/Areas/EstateAgent/Views/LayoutEstateAgent/Index.cshtml";
 }
 
 <div class="container-fluid pt-4 px-4">
@@ -37,9 +37,13 @@
                     <label>İlan Adresi</label>
                     <textarea asp-for="Address" class="form-control" rows="5"></textarea>
                     <br />
-                    <button type="submit" class="btn btn-primary">İlanı Kaydet</button>
+                    <label>İlan Açıklaması</label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <br />
+                    <button type="submit" class="btn btn-primary">İlanı Oluştur</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+

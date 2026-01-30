@@ -20,7 +20,7 @@ namespace RealEstate_Dapper_UI.Controllers
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<List<ResultProductDto>>(jsonData);
+                var values = JsonConvert.DeserializeObject<List<ResultProductWithCategoryDto>>(jsonData);
                 return View(values);
             }
             return View();
@@ -44,7 +44,7 @@ namespace RealEstate_Dapper_UI.Controllers
             ViewBag.v = categoryValues;
             var model = new CreateProductDto
             {
-                date = DateTime.Now
+                Date = DateTime.Now
             };
 
             return View(model);

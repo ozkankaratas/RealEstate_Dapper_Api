@@ -1,4 +1,4 @@
-﻿@model List<ResultProductDto>
+﻿@model List<ResultProductWithCategoryDto>
 @{
     var count = 0;
 }
@@ -30,17 +30,17 @@
                         count++;
                         <tr>
                             <td>@count</td>
-                            <td>@item.date.ToString("dd.MM.yyyy")</td>
+                            <td>@item.Date.ToString("dd.MM.yyyy")</td>
                             <td>
-                                <img src="@(string.IsNullOrEmpty(item.coverimage) ? "/productImages/default.png" : item.coverimage)"
-                                     alt="@item.title"
+                                <img src="@(string.IsNullOrEmpty(item.CoverImage) ? "/productImages/default.png" : item.CoverImage)"
+                                     alt="@item.Title"
                                      width="80" />
                             </td>
-                            <td>@item.title</td>
-                            <td>@item.city - @item.district</td>
-                            <td>@item.type</td>
-                            <td>@item.categoryName</td>
-                            <td>@item.price</td>
+                            <td>@item.Title</td>
+                            <td>@item.City - @item.District</td>
+                            <td>@item.Type</td>
+                            <td>@item.CategoryName</td>
+                            <td>@item.Price</td>
                             <td><a class="btn btn-sm btn-primary" href="/Products/">Detay</a></td>
                         </tr>
                     }                    

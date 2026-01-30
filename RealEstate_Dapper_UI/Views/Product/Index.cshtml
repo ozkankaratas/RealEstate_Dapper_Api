@@ -1,4 +1,4 @@
-﻿@model List<ResultProductDto>
+﻿@model List<ResultProductWithCategoryDto>
 @{
     ViewData["Title"] = "İlanlar";
     Layout = "~/Views/Admin/Index.cshtml";
@@ -35,31 +35,31 @@
                                 count++;
                                 <tr>
                                     <th scope="row">@count</th>
-                                    <td>@item.date.ToString("dd.MM.yyyy")</td>
+                                    <td>@item.Date.ToString("dd.MM.yyyy")</td>
                                     <td>
-                                        <img src="@(string.IsNullOrEmpty(item.coverimage) ? "/productImages/default.png" : item.coverimage)"
-                                             alt="@item.title"
+                                        <img src="@(string.IsNullOrEmpty(item.CoverImage) ? "/productImages/default.png" : item.CoverImage)"
+                                             alt="@item.Title"
                                              width="80" />
                                     </td>
-                                    <td>@item.title</td>
-                                    <td>@item.city</td>
-                                    <td>@item.district</td>
-                                    <td>@item.categoryName</td>
-                                    <td>@item.price</td>
-                                    <td>@item.type</td>
-                                    <td><a href="/Product/DeleteProduct/@item.productID" class="btn btn-outline-danger">Sil</a></td>
-                                    <td><a href="/Product/UpdateProduct/@item.productID" class="btn btn-outline-success">Güncelle</a></td>
-                                    <td><a href="/Product/ProductDetail/@item.productID" class="btn btn-outline-primary">Detay</a></td>
+                                    <td>@item.Title</td>
+                                    <td>@item.City</td>
+                                    <td>@item.District</td>
+                                    <td>@item.CategoryName</td>
+                                    <td>@item.Price</td>
+                                    <td>@item.Type</td>
+                                    <td><a href="/Product/DeleteProduct/@item.ProductID" class="btn btn-outline-danger">Sil</a></td>
+                                    <td><a href="/Product/UpdateProduct/@item.ProductID" class="btn btn-outline-success">Güncelle</a></td>
+                                    <td><a href="/Product/ProductDetail/@item.ProductID" class="btn btn-outline-primary">Detay</a></td>
                                     <td class="text-center align-middle">
-                                        @if (item.dealOfTheDay)
+                                        @if (item.DealOfTheDay)
                                         {
-                                            <a href="/Product/ChangeDealOfTheDayStatusToFalse/@item.productID"
+                                            <a href="/Product/ChangeDealOfTheDayStatusToFalse/@item.ProductID"
                                                class="toggle-switch active"
                                                title="Pasif Yap"></a>
                                         }
                                         else
                                         {
-                                            <a href="/Product/ChangeDealOfTheDayStatusToTrue/@item.productID"
+                                            <a href="/Product/ChangeDealOfTheDayStatusToTrue/@item.ProductID"
                                                class="toggle-switch passive"
                                                title="Aktif Yap"></a>
                                         }

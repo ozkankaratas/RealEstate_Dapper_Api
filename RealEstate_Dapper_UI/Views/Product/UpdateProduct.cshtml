@@ -8,36 +8,36 @@
     <div class="row g-4">
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">İlan Güncelleme Sayfası</h6>
+                <h6 class="mb-4">İlanı Güncelle</h6>
                 <form method="post">
-                    <input type="hidden" asp-for="productID" />
-                    <input type="hidden" asp-for="date" />
+                    <input type="hidden" asp-for="ProductID" />
+                    <input type="hidden" asp-for="Date" />
                     <label>İlan Tarihi</label>
-                    <input type="text" class="form-control" value="@Model.date.ToString("dd.MM.yyyy")" readonly />
+                    <input type="text" class="form-control" value="@Model.Date.ToString("dd.MM.yyyy")" readonly />
                     <br />
                     <label>İlan Başlığı</label>
-                    <input type="text" asp-for="title" class="form-control" />
+                    <input type="text" asp-for="Title" class="form-control" />
                     <br />
-                    <label>Şehir</label>
-                    <input type="text" asp-for="city" class="form-control" />
+                    <label>Şehir</label>    
+                    <input type="text" asp-for="City" class="form-control" />
                     <br />
                     <label>İlçe</label>
-                    <input type="text" asp-for="district" class="form-control" />
+                    <input type="text" asp-for="District" class="form-control" />
                     <br />
                     <label>İlan Kategorisi</label>
-                    @Html.DropDownListFor(x => x.productCategory, (List<SelectListItem>)ViewBag.v, "Kategori Seçiniz", new { @class = "form-control" })
+                    @Html.DropDownListFor(x => x.ProductCategory, (List<SelectListItem>)ViewBag.v, "Kategori Seçiniz", new { @class = "form-control" })
                     <br />
                     <label>İlan Fiyatı (₺)</label>
-                    <input type="text" asp-for="price" class="form-control" />
+                    <input type="text" asp-for="Price" class="form-control" />
                     <br />
                     <label>İlan Türü</label>
-                    <input type="text" asp-for="type" class="form-control" />
+                    <input type="text" asp-for="Type" class="form-control" />
                     <br />
                     <label>Kapak Fotoğrafı</label>
-                    <input type="text" asp-for="coverimage" class="form-control" />
+                    <input type="text" asp-for="CoverImage" class="form-control" />
                     <br />
                     <label>İlan Adresi</label>
-                    <textarea asp-for="address" class="form-control" rows="5"></textarea>
+                    <textarea asp-for="Address" class="form-control" rows="5"></textarea>
                     <br />
                     <button type="submit" class="btn btn-primary">İlanı Kaydet</button>
                 </form>

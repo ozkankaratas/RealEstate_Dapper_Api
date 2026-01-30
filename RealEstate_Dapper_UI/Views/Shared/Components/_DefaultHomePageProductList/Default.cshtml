@@ -1,4 +1,4 @@
-﻿@model List<RealEstate_Dapper_UI.Dtos.ProductDtos.ResultProductDto>
+﻿@model List<RealEstate_Dapper_UI.Dtos.ProductDtos.ResultProductWithCategoryDto>
 <section class="locations-1" id="locations">
     <div class="locations py-5">
         <div class="container py-lg-5 py-md-4 py-2">
@@ -11,11 +11,11 @@
                 <div class="col-lg-4 col-md-6 mb-3">
                     <a href="property-single.html">
                         <div class="box16">
-                            <div class="rentext-listing-category"><span>@item.type</span><span>@item.categoryName</span></div>
-                            <img class="img-fluid" style="height:250px; width:100%; object-fit:cover;" src="@item.coverimage" alt="">
+                            <div class="rentext-listing-category"><span>@item.Type</span><span>@item.CategoryName</span></div>
+                            <img class="img-fluid" style="height:250px; width:100%; object-fit:cover;" src="@item.CoverImage" alt="">
                             <div class="box-content">
-                                <h3 class="title">₺ @item.price</h3>
-                                <span class="post">@item.address, @item.district, @item.city</span>
+                                <h3 class="title">₺ @item.Price</h3>
+                                <span class="post">@item.Address, @item.District, @item.City</span>
                             </div>
                         </div>
                     </a>

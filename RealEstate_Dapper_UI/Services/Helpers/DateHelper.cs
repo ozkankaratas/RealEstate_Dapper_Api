@@ -26,5 +26,30 @@
 
             return $"{(int)(timeSpan.TotalDays / 365)}y";
         }
+
+        public static string GetFullTimeAgo(DateTime dateTime)
+        {
+            TimeSpan timeSpan = DateTime.Now - dateTime;
+
+            if (timeSpan.TotalSeconds < 1)
+                return "Şimdi";
+
+            if (timeSpan.TotalSeconds < 60)
+                return $"{(int)timeSpan.TotalSeconds} saniye önce";
+
+            if (timeSpan.TotalMinutes < 60)
+                return $"{(int)timeSpan.TotalMinutes} dakika önce";
+
+            if (timeSpan.TotalHours < 24)
+                return $"{(int)timeSpan.TotalHours} saat önce";
+
+            if (timeSpan.TotalDays < 30)
+                return $"{(int)timeSpan.TotalDays} gün önce";
+
+            if (timeSpan.TotalDays < 365)
+                return $"{(int)(timeSpan.TotalDays / 30)} ay önce";
+
+            return $"{(int)(timeSpan.TotalDays / 365)} yıl önce";
+        }
     }
 }
