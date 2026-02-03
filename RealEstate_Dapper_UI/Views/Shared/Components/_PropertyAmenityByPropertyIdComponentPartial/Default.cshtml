@@ -1,0 +1,17 @@
+﻿@model List<ResultPropertyAmenityDto>
+<div class="single-bg-white">
+    <h3 class="post-content-title mb-4">Diğer Özellikler</h3>
+    <ul class="details-list">
+        @foreach (var item in Model)
+        {
+            if (item.Status)
+            {
+                <li><strong>@item.Title</strong></li>
+            }
+            else
+            {
+                <li style="color: gray; opacity: 0.5;">@item.Title</li>
+            }
+        }
+    </ul>
+</div>
