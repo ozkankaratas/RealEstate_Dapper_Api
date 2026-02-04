@@ -31,9 +31,19 @@
     <link href="~/css/site.css" rel="stylesheet" />
 
     <!-- Leaflet -->
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+        .form-control:focus.is-invalid,
+        .form-select:focus.is-invalid {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+        }
+    </style>
 
 </head>
 

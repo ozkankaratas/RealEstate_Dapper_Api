@@ -9,38 +9,47 @@
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Yeni İlan Oluştur</h6>
-                <form method="post">
+                <form method="post" id="advertForm" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="Date" value="@Model.Date.ToString("yyyy-MM-dd")" />
 
                     <div class="border-bottom pb-3 mb-4">
                         <h5 class="text-primary"><i class="fa fa-info-circle me-2"></i>İlan Bilgileri</h5>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label>İlan Tarihi</label>
-                                <input type="text" asp-for="Date" class="form-control" value="@Model.Date.ToString("dd.MM.yyyy")" readonly />
+                                <label>İlan Başlığı <span class="text-danger">*</span></label>
+                                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Deniz Manzaralı 3+1" />
+                                <div class="error-message text-danger small mt-1" style="display: none;"></div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label>İlan Başlığı</label>
-                                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Deniz Manzaralı 3+1" />
+                                <label>İlan Kategorisi <span class="text-danger">*</span></label>
+                                @Html.DropDownListFor(x => x.ProductCategory, (List<SelectListItem>)ViewBag.categories, "Kategori Seçiniz", new { @class = "form-select" })
+                                <div class="error-message text-danger small mt-1" style="display: none;"></div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label>İlan Kategorisi</label>
-                                @Html.DropDownListFor(x => x.ProductCategory, (List<SelectListItem>)ViewBag.v, "Kategori Seçiniz", new { @class = "form-control" })
+                            <div class="col-md-6 mb-3">
+                                <label>İlan Fiyatı (₺) <span class="text-danger">*</span></label>
+                                <input type="text" asp-for="Price" class="form-control" placeholder="Örn: 2500000" value="" />
+                                <div class="error-message text-danger small mt-1" style="display: none;"></div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label>İlan Fiyatı (₺)</label>
-                                <input type="text" asp-for="Price" class="form-control" />
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label>İlan Türü</label>
-                                <input type="text" asp-for="Type" class="form-control" placeholder="Satılık / Kiralık" />
+                            <div class="col-md-6 mb-3">
+                                <label>İlan Türü <span class="text-danger">*</span></label>
+                                <select asp-for="Type" class="form-select">
+                                    <option value="">İlan Türü Seçiniz</option>
+                                    <option value="Satılık">Satılık</option>
+                                    <option value="Kiralık">Kiralık</option>
+                                    <option value="Devren Satılık">Devren Satılık</option>
+                                    <option value="Günlük Kiralık">Günlük Kiralık</option>
+                                    <option value="Sezonluk Kiralık">Sezonluk Kiralık</option>
+                                </select>
+                                <div class="error-message text-danger small mt-1" style="display: none;"></div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label>Kapak Fotoğrafı URL</label>
-                                <input type="text" asp-for="CoverImage" class="form-control" />
+                                <label>Kapak Fotoğrafı</label>
+                                <input type="file" name="file" class="form-control mb-2" accept="image/*" />
                             </div>
+
                             <div class="col-12 mb-3">
                                 <label>İlan Açıklaması</label>
-                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                <textarea asp-for="Description" class="form-control" rows="3" id="descriptionInput" placeholder="İlan hakkında detaylı açıklama yazınız..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -51,28 +60,32 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label>Şehir</label>
-                                    <select id="CityId" asp-for="City" class="form-control">
+                                    <label>Şehir <span class="text-danger">*</span></label>
+                                    <select id="CityId" asp-for="City" class="form-select">
                                         <option value="">Şehir Seçiniz</option>
                                     </select>
+                                    <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label>İlçe</label>
-                                    <select id="DistrictId" asp-for="District" class="form-control">
+                                    <label>İlçe <span class="text-danger">*</span></label>
+                                    <select id="DistrictId" asp-for="District" class="form-select">
                                         <option value="">İlçe Seçiniz</option>
                                     </select>
+                                    <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label>Semt</label>
-                                    <select id="SemtId" asp-for="Semt" class="form-control">
+                                    <label>Semt <span class="text-danger">*</span></label>
+                                    <select id="SemtId" asp-for="Semt" class="form-select">
                                         <option value="">Semt Seçiniz</option>
                                     </select>
+                                    <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                 </div>
                                 <div class="mb-3">
-                                    <label>Mahalle</label>
-                                    <select id="NeighborhoodId" asp-for="Neighborhood" class="form-control">
+                                    <label>Mahalle <span class="text-danger">*</span></label>
+                                    <select id="NeighborhoodId" asp-for="Neighborhood" class="form-select">
                                         <option value="">Mahalle Seçiniz</option>
                                     </select>
+                                    <div class="error-message text-danger small mt-1" style="display: none;"></div>
                                 </div>
                                 <div class="alert alert-info mt-3 p-2 small">
                                     <i class="fa fa-info-circle me-1"></i>
@@ -81,10 +94,11 @@
                             </div>
 
                             <div class="col-md-8">
-                                <label class="fw-bold mb-2">Haritadan Tam Konumu İşaretleyin</label>
+                                <label class="fw-bold mb-2">Haritadan Tam Konumu İşaretleyin <span class="text-danger">*</span></label>
                                 <div id="map" style="height: 400px; border-radius: 8px; border: 1px solid #ddd;"></div>
                                 <input type="hidden" asp-for="Latitude" id="lat" />
                                 <input type="hidden" asp-for="Longitude" id="lng" />
+                                <div class="error-message text-danger small mt-1" style="display: none;"></div>
                             </div>
                         </div>
                     </div>

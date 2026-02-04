@@ -16,14 +16,15 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 
         public async Task CreateProduct(CreateProductDto createProductDto)
         {
-            string query = "INSERT INTO Product (Title, Price, City, District, CoverImage, City, District, Semt, Latitude, Longitude, Neighborhood, Description, Type, DealOfTheDay, Date, Status, ProductCategory, AppUserId) " +
-                           "VALUES (@Title, @Price, @City, @District, @CoverImage, @Semt, @Latitude, @Longitude, @Neighborhood, @Description, @Type, @DealOfTheDay, @Date, @Status, @ProductCategory, @AppUserId)";
+            string query = "INSERT INTO Product (Title, Price, City, District, CoverImage, Semt, Latitude, Longitude, Neighborhood, Description, Type, DealOfTheDay, Date, Status, ProductCategory, AppUserId) " +
+               "VALUES (@Title, @Price, @City, @District, @CoverImage, @Semt, @Latitude, @Longitude, @Neighborhood, @Description, @Type, @DealOfTheDay, @Date, @Status, @ProductCategory, @AppUserId)";
+
             var parameters = new DynamicParameters(createProductDto);
+
             using (var connection = _context.CreateConnection())
             {
                 await connection.ExecuteAsync(query, parameters);
             }
-
         }
 
         public async Task DeleteProduct(int id)
