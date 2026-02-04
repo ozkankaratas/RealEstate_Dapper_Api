@@ -1,6 +1,6 @@
-﻿namespace RealEstate_Dapper_UI.Dtos.ProductDetailDtos
+﻿namespace RealEstate_Dapper_Api.Dtos.ProductDetailDtos
 {
-    public class GetProductDetailByIdDto
+    public class UpdateProductDetailDto
     {
         public int ProductDetailID { get; set; }
         public int ProductSize { get; set; }
@@ -10,6 +10,5 @@
         public int GarageSize { get; set; }
         public string BuildYear { get; set; }
         public string VideoUrl { get; set; }
-        public int ProductID { get; set; }
     }
 }

@@ -15,9 +15,9 @@ namespace RealEstate_Dapper_Api.Repositories.EstateAgentRepositories.DashboardRe
 
         public async Task<List<ResultProductChartDto>> GetEmployeeProductCountByYearChart(int id)
         {
-            string query = @"SELECT YEAR(Date) AS [Year], COUNT(*) AS ProductCount FROM Product WHERE EmployeeID = @employeeId GROUP BY YEAR(Date) ORDER BY [Year] DESC";
+            string query = @"SELECT YEAR(Date) AS [Year], COUNT(*) AS ProductCount FROM Product WHERE AppUserId = @appUserId GROUP BY YEAR(Date) ORDER BY [Year] DESC";
             var parameters = new DynamicParameters();
-            parameters.Add("@employeeId", id);
+            parameters.Add("@appUserId", id);
 
             using (var connection = _context.CreateConnection())
             {

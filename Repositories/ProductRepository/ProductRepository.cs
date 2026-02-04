@@ -16,22 +16,9 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 
         public async Task CreateProduct(CreateProductDto createProductDto)
         {
-            string query = "INSERT INTO Product (Title, Price, City, District, CoverImage, Address, Description, Type, DealOfTheDay, Date, Status, ProductCategory, EmployeeId) " +
-                           "VALUES (@Title, @Price, @City, @District, @CoverImage, @Address, @Description, @Type, @DealOfTheDay, @Date, @Status, @ProductCategory, @EmployeeId)";
-            var parameters = new DynamicParameters();
-            parameters.Add("Title", createProductDto.Title);
-            parameters.Add("Price", createProductDto.Price);
-            parameters.Add("City", createProductDto.City);
-            parameters.Add("District", createProductDto.District);
-            parameters.Add("CoverImage", createProductDto.CoverImage);
-            parameters.Add("Address", createProductDto.Address);
-            parameters.Add("Description", createProductDto.Description);
-            parameters.Add("Type", createProductDto.Type);
-            parameters.Add("DealOfTheDay", createProductDto.DealOfTheDay);
-            parameters.Add("Date", createProductDto.Date);
-            parameters.Add("Status", createProductDto.Status);
-            parameters.Add("ProductCategory", createProductDto.ProductCategory);
-            parameters.Add("EmployeeId", createProductDto.EmployeeID);
+            string query = "INSERT INTO Product (Title, Price, City, District, CoverImage, City, District, Semt, Latitude, Longitude, Neighborhood, Description, Type, DealOfTheDay, Date, Status, ProductCategory, AppUserId) " +
+                           "VALUES (@Title, @Price, @City, @District, @CoverImage, @Semt, @Latitude, @Longitude, @Neighborhood, @Description, @Type, @DealOfTheDay, @Date, @Status, @ProductCategory, @AppUserId)";
+            var parameters = new DynamicParameters(createProductDto);
             using (var connection = _context.CreateConnection())
             {
                 await connection.ExecuteAsync(query, parameters);
@@ -52,22 +39,43 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 
         public async Task UpdateProduct(UpdateProductDto updateProductDto)
         {
-            string query = "UPDATE Product SET Title = @Title, Price = @Price, City = @City, District = @District, CoverImage = @CoverImage, Address = @Address, Description = @Description, Type = @Type, DealOfTheDay = @DealOfTheDay,  Date = @Date, Status = @Status, ProductCategory = @ProductCategory WHERE ProductID = @ProductID";
-            var parameters = new DynamicParameters();
-            parameters.Add("ProductID", updateProductDto.ProductID);
-            parameters.Add("Title", updateProductDto.Title);
-            parameters.Add("Price", updateProductDto.Price);
-            parameters.Add("City", updateProductDto.City);
-            parameters.Add("District", updateProductDto.District);
-            parameters.Add("CoverImage", updateProductDto.CoverImage);
-            parameters.Add("Address", updateProductDto.Address);
-            parameters.Add("Description", updateProductDto.Description);
-            parameters.Add("Type", updateProductDto.Type);
-            parameters.Add("DealOfTheDay", updateProductDto.DealOfTheDay);
-            parameters.Add("Date", updateProductDto.Date);
-            parameters.Add("Status", updateProductDto.Status);
-            parameters.Add("ProductCategory", updateProductDto.ProductCategory);
+            string query = "UPDATE Product SET Title = @Title, Price = @Price, City = @City, District = @District, CoverImage = @CoverImage, Semt = @Semt, Neighborhood = @Neighborhood, Latitude = @Latitude, Longitude = @Longitude, Description = @Description, Type = @Type, DealOfTheDay = @DealOfTheDay,  Date = @Date, Status = @Status, ProductCategory = @ProductCategory WHERE ProductID = @ProductID";
+            var parameters = new DynamicParameters(updateProductDto);
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
+        }
 
+        public async Task CreateProductDetail(CreateProductDetailDto createProductDetailDto, int id)
+        {
+            string query = "INSERT INTO ProductDetails (ProductSize, BedroomCount, BathroomCount, RoomCount, GarageSize, BuildYear, VideoUrl, ProductID) " +
+                           "VALUES (@ProductSize, @BedroomCount, @BathroomCount, @RoomCount, @GarageSize, @BuildYear, @VideoUrl, @ProductID)";
+            var parameters = new DynamicParameters(createProductDetailDto);
+            parameters.Add("@ProductID", id);
+
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
+        }
+
+        public async Task DeleteProductDetail(int id)
+        {
+            string query = "DELETE FROM ProductDetails WHERE ProductDetailID = @ProductDetailID";
+            var parameters = new DynamicParameters();
+            parameters.Add("@ProductDetailID", id);
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
+        }
+
+        public async Task UpdateProductDetail(UpdateProductDetailDto updateProductDetailDto, int id)
+        {
+            string query = "UPDATE ProductDetails SET ProductSize = @ProductSize, BedroomCount = @BedroomCount, BathroomCount = @BathroomCount, RoomCount = @RoomCount, GarageSize = @GarageSize, BuildYear = @BuildYear, VideoUrl = @VideoUrl, ProductID = @ProductID, WHERE ProductDetailID = @ProductDetailID";
+            var parameters = new DynamicParameters(updateProductDetailDto);
+            parameters.Add("@ProductID", id);
             using (var connection = _context.CreateConnection())
             {
                 await connection.ExecuteAsync(query, parameters);
@@ -154,12 +162,12 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 
         public async Task<List<ResultProductAdvertListWithCategoryByEmployeeDto>> GetActiveProductAdvertListByEmployeeAsyn(int id)
         {
-            string query = "SELECT p.ProductID, p.Title, p.Price, p.City, p.District, p.Address, c.CategoryName, p.CoverImage AS CoverImage, p.Type, p.DealOfTheDay, p.Status,  p.Date " +
+            string query = "SELECT p.ProductID, p.Title, p.Price, p.City, p.District, c.CategoryName, p.CoverImage AS CoverImage, p.Type, p.DealOfTheDay, p.Status,  p.Date " +
                            "FROM Product p " +
                            "INNER JOIN Category c ON p.ProductCategory = c.CategoryId " +
-                           "WHERE p.EmployeeID = @employeeID AND p.Status = 1";
+                           "WHERE p.AppUserId = @appUserId AND p.Status = 1";
             var parameters = new DynamicParameters();
-            parameters.Add("employeeID", id);
+            parameters.Add("appUserId", id);
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryAsync<ResultProductAdvertListWithCategoryByEmployeeDto>(query, parameters);
@@ -169,12 +177,12 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 
         public async Task<List<ResultProductAdvertListWithCategoryByEmployeeDto>> GetPassiveProductAdvertListByEmployeeAsyn(int id)
         {
-            string query = "SELECT p.ProductID, p.Title, p.Price, p.City, p.District, p.Address, c.CategoryName, p.CoverImage AS CoverImage, p.Type, p.DealOfTheDay, p.Status, p.Date " +
+            string query = "SELECT p.ProductID, p.Title, p.Price, p.City, p.District, c.CategoryName, p.CoverImage AS CoverImage, p.Type, p.DealOfTheDay, p.Status, p.Date " +
                            "FROM Product p " +
                            "INNER JOIN Category c ON p.ProductCategory = c.CategoryId " +
-                           "WHERE p.EmployeeID = @employeeID AND p.Status = 0";
+                           "WHERE p.AppUserId = @appUserId AND p.Status = 0";
             var parameters = new DynamicParameters();
-            parameters.Add("employeeID", id);
+            parameters.Add("appUserId", id);
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryAsync<ResultProductAdvertListWithCategoryByEmployeeDto>(query, parameters);
@@ -184,9 +192,9 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 
         public async Task<List<ResultProductWithCategoryDto>> GetLastFiveProductsByIdWithCategoryAsync(int id)
         {
-            string query = "SELECT TOP(5) p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId Where EmployeeID=@employeeId ORDER BY p.ProductId DESC";
+            string query = "SELECT TOP(5) p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId Where AppUserId=@appUserId ORDER BY p.ProductId DESC";
             var parameters = new DynamicParameters();
-            parameters.Add("employeeId", id);
+            parameters.Add("appUserId", id);
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryAsync<ResultProductWithCategoryDto>(query, parameters);

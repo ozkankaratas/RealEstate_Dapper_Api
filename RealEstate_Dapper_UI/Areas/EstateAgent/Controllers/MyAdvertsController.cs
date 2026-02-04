@@ -79,7 +79,7 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
             createProductDto.Date = DateTime.Now;
             createProductDto.Status = true;
             var id = _loginService.GetUserId;
-            createProductDto.EmployeeID = int.Parse(id);
+            createProductDto.AppUserId = int.Parse(id);
 
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createProductDto);

@@ -44,7 +44,8 @@ namespace RealEstate_Dapper_UI.Controllers
                 ViewBag.price = values.Price.ToString("N0", new System.Globalization.CultureInfo("tr-TR"));
                 ViewBag.city = values.City;
                 ViewBag.district = values.District;
-                ViewBag.address = values.Address;
+                ViewBag.semt = values.Semt;
+                ViewBag.neighborhood = values.Neighborhood;
                 ViewBag.type = values.Type;
                 ViewBag.date = values.Date;
                 ViewBag.description = values.Description;
@@ -62,7 +63,6 @@ namespace RealEstate_Dapper_UI.Controllers
                 ViewBag.garageSize = values2.GarageSize;
                 ViewBag.buildYear = values2.BuildYear;
                 ViewBag.roomCount = values2.RoomCount;
-                ViewBag.location = values2.Location;
                 ViewBag.videoUrl = VideoUrlEmbedHelper.ConvertToEmbedUrl(values2.VideoUrl);
             }
             return View();

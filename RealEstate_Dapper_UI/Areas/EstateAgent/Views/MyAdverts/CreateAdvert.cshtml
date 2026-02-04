@@ -10,40 +10,90 @@
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Yeni İlan Oluştur</h6>
                 <form method="post">
-                    <label>İlan Tarihi</label>
-                    <input type="text" asp-for="Date" class="form-control" value="@Model.Date.ToString("dd.MM.yyyy")" readonly />
-                    <br />
-                    <label>İlan Başlığı</label>
-                    <input type="text" asp-for="Title" class="form-control" />
-                    <br />
-                    <label>Şehir</label>
-                    <input type="text" asp-for="City" class="form-control" />
-                    <br />
-                    <label>İlçe</label>
-                    <input type="text" asp-for="District" class="form-control" />
-                    <br />
-                    <label>İlan Kategorisi</label>
-                    @Html.DropDownListFor(x => x.ProductCategory, (List<SelectListItem>)ViewBag.v, "Kategori Seçiniz", new { @class = "form-control" })
-                    <br />
-                    <label>İlan Fiyatı (₺)</label>
-                    <input type="text" asp-for="Price" class="form-control" />
-                    <br />
-                    <label>İlan Türü</label>
-                    <input type="text" asp-for="Type" class="form-control" />
-                    <br />
-                    <label>Kapak Fotoğrafı</label>
-                    <input type="text" asp-for="CoverImage" class="form-control" />
-                    <br />
-                    <label>İlan Adresi</label>
-                    <textarea asp-for="Address" class="form-control" rows="5"></textarea>
-                    <br />
-                    <label>İlan Açıklaması</label>
-                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
-                    <br />
-                    <button type="submit" class="btn btn-primary">İlanı Oluştur</button>
+
+                    <div class="border-bottom pb-3 mb-4">
+                        <h5 class="text-primary"><i class="fa fa-info-circle me-2"></i>İlan Bilgileri</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>İlan Tarihi</label>
+                                <input type="text" asp-for="Date" class="form-control" value="@Model.Date.ToString("dd.MM.yyyy")" readonly />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>İlan Başlığı</label>
+                                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Deniz Manzaralı 3+1" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>İlan Kategorisi</label>
+                                @Html.DropDownListFor(x => x.ProductCategory, (List<SelectListItem>)ViewBag.v, "Kategori Seçiniz", new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>İlan Fiyatı (₺)</label>
+                                <input type="text" asp-for="Price" class="form-control" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>İlan Türü</label>
+                                <input type="text" asp-for="Type" class="form-control" placeholder="Satılık / Kiralık" />
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label>Kapak Fotoğrafı URL</label>
+                                <input type="text" asp-for="CoverImage" class="form-control" />
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label>İlan Açıklaması</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h5 class="text-primary"><i class="fa fa-map-marker-alt me-2"></i>İlan Detayları & Konum</h5>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label>Şehir</label>
+                                    <select id="CityId" asp-for="City" class="form-control">
+                                        <option value="">Şehir Seçiniz</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label>İlçe</label>
+                                    <select id="DistrictId" asp-for="District" class="form-control">
+                                        <option value="">İlçe Seçiniz</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Semt</label>
+                                    <select id="SemtId" asp-for="Semt" class="form-control">
+                                        <option value="">Semt Seçiniz</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Mahalle</label>
+                                    <select id="NeighborhoodId" asp-for="Neighborhood" class="form-control">
+                                        <option value="">Mahalle Seçiniz</option>
+                                    </select>
+                                </div>
+                                <div class="alert alert-info mt-3 p-2 small">
+                                    <i class="fa fa-info-circle me-1"></i>
+                                    Konumu haritadan kontrol ediniz.
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <label class="fw-bold mb-2">Haritadan Tam Konumu İşaretleyin</label>
+                                <div id="map" style="height: 400px; border-radius: 8px; border: 1px solid #ddd;"></div>
+                                <input type="hidden" asp-for="Latitude" id="lat" />
+                                <input type="hidden" asp-for="Longitude" id="lng" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">İlanı Yayınla</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-

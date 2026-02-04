@@ -12,9 +12,9 @@ namespace RealEstate_Dapper_Api.Repositories.EstateAgentRepositories.DashboardRe
         }
         public int ActiveProductCount(int id)
         {
-            string query = "SELECT COUNT(*) FROM Product WHERE EmployeeID=@employeeId AND Status=1";
+            string query = "SELECT COUNT(*) FROM Product WHERE AppUserId=@appUserId AND Status=1";
             var parameters = new DynamicParameters();
-            parameters.Add("@employeeId", id);
+            parameters.Add("@appUserId", id);
             using (var connection = _context.CreateConnection())
             {
                 var values = connection.QueryFirstOrDefault<int>(query, parameters);
@@ -24,9 +24,9 @@ namespace RealEstate_Dapper_Api.Repositories.EstateAgentRepositories.DashboardRe
 
         public int PassiveProductCount(int id)
         {
-            string query = "SELECT COUNT(*) FROM Product WHERE EmployeeID=@employeeId AND Status=0";
+            string query = "SELECT COUNT(*) FROM Product WHERE AppUserId=@appUserId AND Status=0";
             var parameters = new DynamicParameters();
-            parameters.Add("@employeeId", id);
+            parameters.Add("@appUserId", id);
             using (var connection = _context.CreateConnection())
             {
                 var values = connection.QueryFirstOrDefault<int>(query, parameters);
@@ -46,9 +46,9 @@ namespace RealEstate_Dapper_Api.Repositories.EstateAgentRepositories.DashboardRe
 
         public int ProductCountByEmployeeId(int id)
         {
-            string query = "SELECT COUNT(*) FROM Product WHERE EmployeeID=@employeeId";
+            string query = "SELECT COUNT(*) FROM Product WHERE AppUserId=@appUserId";
             var parameters = new DynamicParameters();
-            parameters.Add("@employeeId", id); 
+            parameters.Add("@appUserId", id); 
             using (var connection = _context.CreateConnection())
             {
                 var values = connection.QueryFirstOrDefault<int>(query, parameters);
