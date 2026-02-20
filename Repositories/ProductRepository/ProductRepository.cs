@@ -214,5 +214,50 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
                 return values.FirstOrDefault();
             }
         }
+
+        public async Task<List<ResultProductWithSearchListDto>> ResultProductWithSearchList(string searchValue, int propertyCategoryId, string city)
+        {
+            string query = @"
+                SELECT 
+                    p.*, 
+                    c.CategoryName, 
+                    ct.CityName, 
+                    d.DistrictName, 
+                    n.NeighborhoodName, 
+                    s.SemtName
+                FROM Product p
+                LEFT JOIN Category c ON p.ProductCategory = c.CategoryId
+                LEFT JOIN Cities ct ON p.City = ct.CityID
+                LEFT JOIN Districts d ON p.District = d.DistrictID
+                LEFT JOIN Neighborhoods n ON p.Neighborhood = n.NeighborhoodID
+                LEFT JOIN Semts s ON p.Semt = s.SemtID
+                WHERE p.Status = 1";
+
+            var parameters = new DynamicParameters();
+            if (!string.IsNullOrEmpty(city) && city != "0")
+            {
+                query += " AND p.City = @City";
+                parameters.Add("@City", city);
+            }
+            if (propertyCategoryId > 0)
+            {
+                query += " AND p.ProductCategory = @PropertyCategoryId";
+                parameters.Add("@PropertyCategoryId", propertyCategoryId);
+            }
+
+
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                query += " AND (p.Title LIKE @SearchValue OR p.Description LIKE @SearchValue)";
+                parameters.Add("@SearchValue", $"%{searchValue}%");
+            }
+
+            using (var connection = _context.CreateConnection())
+            {
+                var values = await connection.QueryAsync<ResultProductWithSearchListDto>(query, parameters);
+                return values.ToList();
+            }
+        }
     }
 }
