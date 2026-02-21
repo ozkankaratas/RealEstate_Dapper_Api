@@ -2,6 +2,7 @@
 using RealEstate_Dapper_Api.Dtos.ProductDetailDtos;
 using RealEstate_Dapper_Api.Dtos.ProductDtos;
 using RealEstate_Dapper_Api.Models.DapperContext;
+using System.Buffers;
 
 namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 {
@@ -85,7 +86,21 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
 
         public async Task<GetByIDProductDto> GetProductById(int id)
         {
-            string query = "SELECT p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId where ProductId = @ProductID";
+            string query = @"
+                SELECT 
+                    p.*, 
+                    c.CategoryName, 
+                    ct.CityName, 
+                    d.DistrictName, 
+                    n.NeighborhoodName, 
+                    s.SemtName
+                FROM Product p
+                LEFT JOIN Category c ON p.ProductCategory = c.CategoryId
+                LEFT JOIN Cities ct ON p.City = ct.CityID
+                LEFT JOIN Districts d ON p.District = d.DistrictID
+                LEFT JOIN Neighborhoods n ON p.Neighborhood = n.NeighborhoodID
+                LEFT JOIN Semts s ON p.Semt = s.SemtID 
+                WHERE ProductId = @ProductID";
             var parameters = new DynamicParameters();
             parameters.Add("@ProductID", id);
             using (var connection = _context.CreateConnection())
@@ -257,9 +272,6 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
                 query += " AND p.ProductCategory = @PropertyCategoryId";
                 parameters.Add("@PropertyCategoryId", propertyCategoryId);
             }
-
-
-
             if (!string.IsNullOrEmpty(searchValue))
             {
                 query += " AND (p.Title LIKE @SearchValue OR p.Description LIKE @SearchValue)";
@@ -269,6 +281,30 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryAsync<ResultProductWithSearchListDto>(query, parameters);
+                return values.ToList();
+            }
+        }
+
+        public async Task<List<ResultProductWithCategoryDto>> GetDealOfTheDayProductWithCategoryAsync()
+        {
+            string query = @"
+                SELECT 
+                    p.*, 
+                    c.CategoryName, 
+                    ct.CityName, 
+                    d.DistrictName, 
+                    n.NeighborhoodName, 
+                    s.SemtName
+                FROM Product p
+                LEFT JOIN Category c ON p.ProductCategory = c.CategoryId
+                LEFT JOIN Cities ct ON p.City = ct.CityID
+                LEFT JOIN Districts d ON p.District = d.DistrictID
+                LEFT JOIN Neighborhoods n ON p.Neighborhood = n.NeighborhoodID
+                LEFT JOIN Semts s ON p.Semt = s.SemtID 
+                WHERE DealOfTheDay=1";
+            using (var connection = _context.CreateConnection())
+            {
+                var values = await connection.QueryAsync<ResultProductWithCategoryDto>(query);
                 return values.ToList();
             }
         }

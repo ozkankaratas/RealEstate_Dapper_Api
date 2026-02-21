@@ -50,24 +50,26 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpGet]
         public async Task<IActionResult> PropertySingle(int id)
         {
-            id = 6;
+            id = 3;
             var client = _httpClientFactory.CreateClient();
 
             var responseMessage = await client.GetAsync("https://localhost:44338/api/Products/GetProductById?id=" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
-                var values = JsonConvert.DeserializeObject<ResultProductDto>(jsonData);
+                var values = JsonConvert.DeserializeObject<ResultProductWithCategoryDto>(jsonData);
                 ViewBag.title1 = values.Title.ToString();
                 ViewBag.price = values.Price.ToString("N0", new System.Globalization.CultureInfo("tr-TR"));
-                ViewBag.city = values.City;
-                ViewBag.district = values.District;
-                ViewBag.semt = values.Semt;
-                ViewBag.neighborhood = values.Neighborhood;
+                ViewBag.city = values.CityName;
+                ViewBag.district = values.DistrictName;
+                ViewBag.semt = values.SemtName;
+                ViewBag.neighborhood = values.NeighborhoodName;
                 ViewBag.type = values.Type;
                 ViewBag.date = values.Date;
                 ViewBag.description = values.Description;
                 ViewBag.id = values.ProductID;
+                ViewBag.longitude = values.Longitude;
+                ViewBag.latitude = values.Latitude;
             }
 
             var responseMessage2 = await client.GetAsync("https://localhost:44338/api/ProductDetails/GetProductDetailById?id=" + id);
