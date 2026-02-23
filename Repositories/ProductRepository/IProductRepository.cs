@@ -25,5 +25,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
         Task ProductStatusChangeToTrue(int id);
         Task ProductStatusChangeToFalse(int id);
         Task<List<ResultProductWithSearchListDto>> ResultProductWithSearchList(string searchValue, int propertyCategoryId, string city);
+        Task<List<ResultProductWithCategoryDto>> GetLastThreeProductsWithCategoryAsync();
+
     }
 }

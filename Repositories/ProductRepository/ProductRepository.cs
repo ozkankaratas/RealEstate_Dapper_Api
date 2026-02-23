@@ -308,5 +308,15 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
                 return values.ToList();
             }
         }
+
+        public async Task<List<ResultProductWithCategoryDto>> GetLastThreeProductsWithCategoryAsync()
+        {
+            string query = "SELECT TOP(3) p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId WHERE p.Status= 1 ORDER BY p.ProductId DESC";
+            using (var connection = _context.CreateConnection())
+            {
+                var values = await connection.QueryAsync<ResultProductWithCategoryDto>(query);
+                return values.ToList();
+            }
+        }
     }
 }
