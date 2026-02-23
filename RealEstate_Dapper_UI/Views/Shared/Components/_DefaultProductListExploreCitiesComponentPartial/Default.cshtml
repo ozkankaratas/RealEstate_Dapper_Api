@@ -1,7 +1,4 @@
 ﻿@model List<ResultPopularLocationDto>
-@{
-    Random random = new Random();
-}
 <section class="locations-1 popular" id="locations">
     <div class="locations py-5">
         <div class="container py-lg-5 py-md-4">
@@ -10,20 +7,19 @@
                 <h3 class="title-big">Popüler Konumlar</h3>
             </div>
             <div class="row pt-5">
-                @foreach(var item in Model)
+                @foreach (var item in Model)
                 {
-                int randomNumber = random.Next(100, 15000);
-                <div class="col-lg-3 col-md-4 col-6 mb-3">
-                    <a href="#url">
-                        <div class="box16">
-                            <img class="img-fluid" style="height:250px; width:100%; object-fit:cover;" src="@item.ImageUrl" alt="">
-                            <div class="box-content">
-                                <h3 class="title mb-1">@item.CityName</h3>
-                                <span class="post">@randomNumber İlan</span>
+                    <div class="col-lg-3 col-md-4 col-6 mb-3">
+                        <a asp-controller="Property" asp-action="PropertyListWithSearch" asp-route-city="@item.CityID">
+                            <div class="box16">
+                                <img class="img-fluid" style="height:250px; width:100%; object-fit:cover;" src="@item.ImageUrl" alt="">
+                                <div class="box-content">
+                                    <h3 class="title mb-1">@item.CityName</h3>
+                                    <span class="post">@item.PropertyCount İlan</span>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
                 }
             </div>
         </div>

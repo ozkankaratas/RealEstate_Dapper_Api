@@ -12,18 +12,18 @@
                         <h6 class="title-small">Referanslarımız</h6>
                         <div class="client-grid">
                             <div class="client-title">
-                                <h3 class="title-big">Müşterileri ilişkilerine değer veriyoruz</h3>
+                                <h3 class="title-big">Müşterileri İlişkilerine Değer Veriyoruz</h3>
                             </div>
                             <div class="clients-info">
-                                <h3 class="title-big">172</h3>
-                                <p>Memnun Müşteriler</p>
+                                <h3 class="title-big">2867</h3>
+                                <p>Toplam Müşterimiz</p>
                             </div>
                         </div>
-                        @foreach(var item in Model)
-                        {
+                        
                             <div class="w3l-clients" id="testimonials">
                                 <div id="owl-demo1" class="owl-carousel owl-theme mt-4 pt-2 mb-4">
-                                
+                                @foreach (var item in Model)
+                                {
                                     <div class="item">
                                         <div class="testimonial-content">
                                             <div class="testimonial">
@@ -41,10 +41,9 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                }
                                 </div>
                             </div>
-                        }
                         <a href="#agents" class="btn btn-style btn-primary mt-5">Acentamızla İletişime Geçin</a>
                     </div>
                 </div>
