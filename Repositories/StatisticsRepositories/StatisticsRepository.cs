@@ -88,7 +88,7 @@ namespace RealEstate_Dapper_Api.Repositories.StatisticsRepositories
             using (var connection = _context.CreateConnection())
             {
                 var value = connection.QueryFirstOrDefault<string>(query);
-                return value;
+                return value ?? throw new Exception("Bulunamadı");
             }
         }
 
@@ -98,7 +98,7 @@ namespace RealEstate_Dapper_Api.Repositories.StatisticsRepositories
             using (var connection = _context.CreateConnection())
             {
                 var value = connection.QueryFirstOrDefault<string>(query);
-                return value;
+                return value ?? throw new Exception("Bulunamadı");
             }
         }
 
@@ -118,7 +118,7 @@ namespace RealEstate_Dapper_Api.Repositories.StatisticsRepositories
             using (var connection = _context.CreateConnection())
             {
                 var value = connection.QueryFirstOrDefault<string>(query);
-                return value;
+                return value ?? throw new Exception("Bulunamadı");
             }
             throw new NotImplementedException();
 
@@ -140,7 +140,7 @@ namespace RealEstate_Dapper_Api.Repositories.StatisticsRepositories
             using (var connection = _context.CreateConnection())
             {
                 var value = connection.QueryFirstOrDefault<string>(query);
-                return value;
+                return value ?? throw new Exception("Bulunamadı");
             }
         }
 
@@ -150,7 +150,7 @@ namespace RealEstate_Dapper_Api.Repositories.StatisticsRepositories
             using (var connection = _context.CreateConnection())
             {
                 var value = connection.QueryFirstOrDefault<string>(query);
-                return value;
+                return value ?? throw new Exception("Bulunamadı");
             }
         }
 

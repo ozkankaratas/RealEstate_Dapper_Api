@@ -16,9 +16,9 @@ namespace RealEstate_Dapper_Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllToDoListAsyn()
+        public async Task<IActionResult> GetAllToDoList()
         {
-            var values = await _toDoListRepository.GetAllToDoListAsyn();
+            var values = await _toDoListRepository.GetAllToDoList();
             return Ok(values);
         }
 

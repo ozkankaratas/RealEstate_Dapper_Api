@@ -17,7 +17,7 @@ namespace RealEstate_Dapper_Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllSubFeatures()
         {
-            var values = await _subFeatureRepository.GetAllSubFeaturesAsync();
+            var values = await _subFeatureRepository.GetAllSubFeatures();
             return Ok(values);
         }
     }

@@ -13,7 +13,7 @@ namespace RealEstate_Dapper_Api.Repositories.ContactRepositories
             _context = context;
         }
 
-        public async void CreateContact(CreateContactDto createContactDto)
+        public async Task CreateContact(CreateContactDto createContactDto)
         {
             string query = "INSERT INTO Contact (Name, Email, Subject, Message, SendDate) VALUES (@name, @email, @subject, @message, @sendDate)";
             var parameters = new DynamicParameters();
@@ -28,7 +28,7 @@ namespace RealEstate_Dapper_Api.Repositories.ContactRepositories
             }
         }
 
-        public async void DeleteContact(int id)
+        public async Task DeleteContact(int id)
         {
             string query = "DELETE FROM Contact WHERE ContactID = @contactID";
             var parameters = new DynamicParameters();
@@ -39,7 +39,7 @@ namespace RealEstate_Dapper_Api.Repositories.ContactRepositories
             }
         }
 
-        public async Task<List<ResultContactDto>> GetAllContactAsyn()
+        public async Task<List<ResultContactDto>> GetAllContact()
         {
             string query = "SELECT * From Contact";
             using (var connection = _context.CreateConnection())
@@ -57,8 +57,7 @@ namespace RealEstate_Dapper_Api.Repositories.ContactRepositories
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryFirstOrDefaultAsync<GetByIDContactDto>(query, parameters);
-                return values;
-            }
+                return values ?? throw new Exception("Bulunamadı");            }
         }
 
         public async Task<List<LastFourContactResultDto>> GetLastFourContact()

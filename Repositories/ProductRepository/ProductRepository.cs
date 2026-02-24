@@ -106,11 +106,11 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             using (var connection = _context.CreateConnection())
             {
                 var value = await connection.QueryAsync<GetByIDProductDto>(query, parameters);
-                return value.FirstOrDefault();
+                return value.FirstOrDefault() ?? throw new Exception("Ürün bulunamadı");         
             }
         }
 
-        public async Task<List<ResultProductDto>> GetAllProductAsyn()
+        public async Task<List<ResultProductDto>> GetAllProduct()
         {
             string query = "SELECT * From Product";
             using (var connection = _context.CreateConnection())
@@ -120,7 +120,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             }
         }
 
-        public async Task<List<ResultProductWithCategoryDto>> GetAllProductWithCategoryAsync()
+        public async Task<List<ResultProductWithCategoryDto>> GetAllProductWithCategory()
         {
             string query = @"
                 SELECT 
@@ -143,7 +143,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             }
         }
 
-        public async Task<List<ResultProductWithCategoryDto>> GetLastFiveProductsWithCategoryAsync()
+        public async Task<List<ResultProductWithCategoryDto>> GetLastFiveProductsWithCategory()
         {
             string query = "SELECT TOP(5) p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId WHERE p.Status= 1 ORDER BY p.ProductId DESC";
             using (var connection = _context.CreateConnection())
@@ -189,7 +189,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             }
         }
 
-        public async Task<List<ResultProductAdvertListWithCategoryByEmployeeDto>> GetActiveProductAdvertListByEmployeeAsyn(int id)
+        public async Task<List<ResultProductAdvertListWithCategoryByEmployeeDto>> GetActiveProductAdvertListByEmployee(int id)
         {
             string query = "SELECT p.ProductID, p.Title, p.Price, p.City, p.District, c.CategoryName, p.CoverImage AS CoverImage, p.Type, p.DealOfTheDay, p.Status,  p.Date " +
                            "FROM Product p " +
@@ -204,7 +204,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             }
         }
 
-        public async Task<List<ResultProductAdvertListWithCategoryByEmployeeDto>> GetPassiveProductAdvertListByEmployeeAsyn(int id)
+        public async Task<List<ResultProductAdvertListWithCategoryByEmployeeDto>> GetPassiveProductAdvertListByEmployee(int id)
         {
             string query = "SELECT p.ProductID, p.Title, p.Price, p.City, p.District, c.CategoryName, p.CoverImage AS CoverImage, p.Type, p.DealOfTheDay, p.Status, p.Date " +
                            "FROM Product p " +
@@ -219,7 +219,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             }
         }
 
-        public async Task<List<ResultProductWithCategoryDto>> GetLastFiveProductsByIdWithCategoryAsync(int id)
+        public async Task<List<ResultProductWithCategoryDto>> GetLastFiveProductsByIdWithCategory(int id)
         {
             string query = "SELECT TOP(5) p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId Where AppUserId=@appUserId ORDER BY p.ProductId DESC";
             var parameters = new DynamicParameters();
@@ -239,7 +239,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryAsync<GetProductDetailByIdDto>(query, parameters);
-                return values.FirstOrDefault();
+                return values.FirstOrDefault() ?? throw new Exception("Ürün detayı bulunamadı");
             }
         }
 
@@ -285,7 +285,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             }
         }
 
-        public async Task<List<ResultProductWithCategoryDto>> GetDealOfTheDayProductWithCategoryAsync()
+        public async Task<List<ResultProductWithCategoryDto>> GetDealOfTheDayProductWithCategory()
         {
             string query = @"
                 SELECT 
@@ -309,7 +309,7 @@ namespace RealEstate_Dapper_Api.Repositories.ProductRepository
             }
         }
 
-        public async Task<List<ResultProductWithCategoryDto>> GetLastThreeProductsWithCategoryAsync()
+        public async Task<List<ResultProductWithCategoryDto>> GetLastThreeProductsWithCategory()
         {
             string query = "SELECT TOP(3) p.*, c.CategoryName FROM Product p INNER JOIN Category c ON p.ProductCategory = c.CategoryId WHERE p.Status= 1 ORDER BY p.ProductId DESC";
             using (var connection = _context.CreateConnection())

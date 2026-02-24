@@ -15,9 +15,9 @@ namespace RealEstate_Dapper_Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllContactAsyn()
+        public async Task<IActionResult> GetAllContact()
         {
-            var values = await _contactRepository.GetAllContactAsyn();
+            var values = await _contactRepository.GetAllContact();
             return Ok(values);
         }
 

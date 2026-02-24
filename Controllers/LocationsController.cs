@@ -17,28 +17,28 @@ namespace RealEstate_Dapper_Api.Controllers
         [HttpGet("cities")]
         public async Task<IActionResult> GetAllCities()
         {
-            var cities = await _locationRepository.GetAllCitiesAsync();
+            var cities = await _locationRepository.GetAllCities();
             return Ok(cities);
         }
 
         [HttpGet("GetDistricts/{cityId}")]
         public async Task<IActionResult> GetDistrictsByCityId(int cityId)
         {
-            var districts = await _locationRepository.GetAllDistrictsByCityIdAsync(cityId);
+            var districts = await _locationRepository.GetAllDistrictsByCityId(cityId);
             return Ok(districts);
         }
 
         [HttpGet("GetSemts/{districtId}")]
         public async Task<IActionResult> GetSemtsByDistrictId(int districtId)
         {
-            var semts = await _locationRepository.GetAllSemtsByDistrictIdAsync(districtId);
+            var semts = await _locationRepository.GetAllSemtsByDistrictId(districtId);
             return Ok(semts);
         }
 
         [HttpGet("GetNeighborhoods/{semtId}")]
         public async Task<IActionResult> GetNeighborhoodsBySemtId(int semtId)
         {
-            var neighborhoods = await _locationRepository.GetAllNeighborhoodsBySemtIdAsync(semtId);
+            var neighborhoods = await _locationRepository.GetAllNeighborhoodsBySemtId(semtId);
             return Ok(neighborhoods);
         }
     }

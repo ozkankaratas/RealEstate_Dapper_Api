@@ -12,7 +12,7 @@ namespace RealEstate_Dapper_Api.Repositories.ServiceRepository
             _context = context;
         }
 
-        public async void CreateService(CreateServiceDto createServiceDto)
+        public async Task CreateService(CreateServiceDto createServiceDto)
         {
             string query = "INSERT INTO Services (ServiceName, ServiceStatus) VALUES (@ServiceName, @ServiceStatus)";
             var parameters = new DynamicParameters();
@@ -24,7 +24,7 @@ namespace RealEstate_Dapper_Api.Repositories.ServiceRepository
             }
         }
 
-        public async void DeleteService(int id)
+        public async Task DeleteService(int id)
         {
             string query = "DELETE FROM Services WHERE ServiceID = @Id";
             var parameters = new DynamicParameters();
@@ -35,7 +35,7 @@ namespace RealEstate_Dapper_Api.Repositories.ServiceRepository
             }
         }
 
-        public async Task<List<ResultServiceDto>> GetAllServiceAsyn()
+        public async Task<List<ResultServiceDto>> GetAllService()
         {
             string query = "SELECT * From Services";
             using(var connection = _context.CreateConnection())
@@ -53,11 +53,11 @@ namespace RealEstate_Dapper_Api.Repositories.ServiceRepository
             using (var connection = _context.CreateConnection())
             {
                 var value = await connection.QueryFirstOrDefaultAsync<GetByIDServiceDto>(query, parameters);
-                return value;
+                return value ?? throw new Exception("Servis bulunamadı");
             }
         }
 
-        public void UpdateService(UpdateServiceDto updateServiceDto)
+        public async Task UpdateService(UpdateServiceDto updateServiceDto)
         {
             string query = "UPDATE Services SET ServiceName = @ServiceName, ServiceStatus = @ServiceStatus WHERE ServiceID = @ServiceID";
             var parameters = new DynamicParameters();
@@ -66,7 +66,7 @@ namespace RealEstate_Dapper_Api.Repositories.ServiceRepository
             parameters.Add("@ServiceID", updateServiceDto.ServiceID);
             using (var connection = _context.CreateConnection())
             {
-                connection.ExecuteAsync(query, parameters);
+                await connection.ExecuteAsync(query, parameters);
             }
         }
     }

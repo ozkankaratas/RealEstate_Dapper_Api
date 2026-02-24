@@ -13,7 +13,7 @@ namespace RealEstate_Dapper_Api.Repositories.LocationRepositories
             _context = context;
         }
 
-        public async Task<List<ResultCityDto>> GetAllCitiesAsync()
+        public async Task<List<ResultCityDto>> GetAllCities()
         {
             string query = "SELECT CityID, CityName FROM Cities";
             using (var connection = _context.CreateConnection())
@@ -23,7 +23,7 @@ namespace RealEstate_Dapper_Api.Repositories.LocationRepositories
             }
         }
 
-        public async Task<List<ResultDistrictDto>> GetAllDistrictsByCityIdAsync(int id)
+        public async Task<List<ResultDistrictDto>> GetAllDistrictsByCityId(int id)
         {
             string query = "SELECT DistrictID, DistrictName, CityID FROM Districts WHERE CityID = @CityID";
             using (var connection = _context.CreateConnection())
@@ -33,7 +33,7 @@ namespace RealEstate_Dapper_Api.Repositories.LocationRepositories
             }
         }
 
-        public async Task<List<ResultNeighborhoodDto>> GetAllNeighborhoodsBySemtIdAsync(int id)
+        public async Task<List<ResultNeighborhoodDto>> GetAllNeighborhoodsBySemtId(int id)
         {
             string query = "SELECT NeighborhoodID, NeighborhoodName, SemtID FROM Neighborhoods WHERE SemtID = @SemtID";
             using (var connection = _context.CreateConnection())
@@ -43,7 +43,7 @@ namespace RealEstate_Dapper_Api.Repositories.LocationRepositories
             }
         }
 
-        public async Task<List<ResultSemtDto>> GetAllSemtsByDistrictIdAsync(int id)
+        public async Task<List<ResultSemtDto>> GetAllSemtsByDistrictId(int id)
         {
             string query = "SELECT SemtID, SemtName, DistrictID FROM Semts WHERE DistrictID = @DistrictID";
             using (var connection = _context.CreateConnection())

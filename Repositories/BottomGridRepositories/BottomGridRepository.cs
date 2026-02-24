@@ -11,7 +11,7 @@ namespace RealEstate_Dapper_Api.Repositories.BottomGridRepositories
         {
             _context = context;
         }
-        public async void CreateBottomGrid(CreateBottomGridDto createBottomGridDto)
+        public async Task CreateBottomGrid(CreateBottomGridDto createBottomGridDto)
         {
             string query = "INSERT INTO BottomGrid (Icon, Title, Description) VALUES (@Icon, @Title, @Description)";
             var parameters = new DynamicParameters();
@@ -24,18 +24,18 @@ namespace RealEstate_Dapper_Api.Repositories.BottomGridRepositories
             }
         }
 
-        public async void DeleteBottomGrid(int id)
+        public async Task DeleteBottomGrid(int id)
         {
             string query = "DELETE FROM BottomGrid WHERE BottomGridID = @Id";
             var parameters = new DynamicParameters();
             parameters.Add("@Id", id);
             using (var connection = _context.CreateConnection())
             {
-                await connection.ExecuteAsync(query, new { Id = id });
+                await connection.ExecuteAsync(query, parameters);
             }
         }
 
-        public async Task<List<ResultBottomGridDto>> GetAllBottomGridAsyn()
+        public async Task<List<ResultBottomGridDto>> GetAllBottomGrid()
         {
             string query = "SELECT * FROM BottomGrid";
             using(var connection = _context.CreateConnection())
@@ -54,11 +54,11 @@ namespace RealEstate_Dapper_Api.Repositories.BottomGridRepositories
             using (var connection = _context.CreateConnection())
             {
                 var value = await connection.QueryFirstOrDefaultAsync<GetBottomGridDto>(query, parameters);
-                return value;
+                return value ?? throw new Exception("Bulunamadı");
             }
         }
 
-        public async void UpdateBottomGrid(UpdateBottomGridDto updateBottomGridDto)
+        public async Task UpdateBottomGrid(UpdateBottomGridDto updateBottomGridDto)
         {
             string query = "UPDATE BottomGrid SET Icon = @Icon, Title = @Title, Description = @Description WHERE BottomGridID = @Id";
             var parameters = new DynamicParameters();

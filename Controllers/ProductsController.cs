@@ -18,7 +18,7 @@ namespace RealEstate_Dapper_Api.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductList()
         {
-            var values = await _productRepository.GetAllProductAsyn();
+            var values = await _productRepository.GetAllProduct();
             return Ok(values);
         }
 
@@ -32,14 +32,14 @@ namespace RealEstate_Dapper_Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            _productRepository.DeleteProduct(id);
+            await _productRepository.DeleteProduct(id);
             return Ok("İlan Başarılı Bir Şekilde Silindi");
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateProduct(UpdateProductDto updateProductDto)
         {
-            _productRepository.UpdateProduct(updateProductDto);
+            await _productRepository.UpdateProduct(updateProductDto);
             return Ok("İlan Başarılı Bir Şekilde Güncellendi");
         }
 
@@ -53,84 +53,84 @@ namespace RealEstate_Dapper_Api.Controllers
         [HttpGet("ProductListWithCategory")]
         public async Task<IActionResult> ProductListWithCategory()
         {
-            var values = await _productRepository.GetAllProductWithCategoryAsync();
+            var values = await _productRepository.GetAllProductWithCategory();
             return Ok(values);
         }
 
         [HttpPut("ChangeDealOfTheDayStatusToFalse/{id}")]
         public async Task<IActionResult> ChangeDealOfTheDayStatusToFalse(int id)
         {
-            _productRepository.ProductDealOfTheDayStatusChangeToFalse(id);
+            await _productRepository.ProductDealOfTheDayStatusChangeToFalse(id);
             return Ok("İlan Günün Fırsatları Arasından Çıkarıldı");
         }
 
         [HttpPut("ChangeDealOfTheDayStatusToTrue/{id}")]
         public async Task<IActionResult> ChangeDealOfTheDayStatusToTrue(int id)
         {
-            _productRepository.ProductDealOfTheDayStatusChangeToTrue(id);
+            await _productRepository.ProductDealOfTheDayStatusChangeToTrue(id);
             return Ok("İlan Günün Fırsatları Arasına Eklendi");
         }
 
         [HttpPut("ChangeStatusToFalse/{id}")]
         public async Task<IActionResult> ChangeStatusToFalse(int id)
         {
-            _productRepository.ProductStatusChangeToFalse(id);
+            await _productRepository.ProductStatusChangeToFalse(id);
             return Ok("İlan Durumu Pasif Olarak Güncellendi");
         }
 
         [HttpPut("ChangeStatusToTrue/{id}")]
         public async Task<IActionResult> ChangeStatusToTrue(int id)
         {
-            _productRepository.ProductStatusChangeToTrue(id);
+            await _productRepository.ProductStatusChangeToTrue(id);
             return Ok("İlan Durumu Aktif Olarak Güncellendi");
         }
 
         [HttpGet("LastFiveProducts")]
         public async Task<IActionResult> LastFiveProducts()
         {
-            var values = await _productRepository.GetLastFiveProductsWithCategoryAsync();
+            var values = await _productRepository.GetLastFiveProductsWithCategory();
             return Ok(values);
         }
 
         [HttpGet("ActiveProductAdvertsListByEmployee")]
         public async Task<IActionResult> ActiveProductAdvertsListByEmployee(int id)
         {
-            var values = await _productRepository.GetActiveProductAdvertListByEmployeeAsyn(id);
+            var values = await _productRepository.GetActiveProductAdvertListByEmployee(id);
             return Ok(values);
         }
 
         [HttpGet("PassiveProductAdvertsListByEmployee")]
         public async Task<IActionResult> PassiveProductAdvertsListByEmployee(int id)
         {
-            var values = await _productRepository.GetPassiveProductAdvertListByEmployeeAsyn(id);
+            var values = await _productRepository.GetPassiveProductAdvertListByEmployee(id);
             return Ok(values);
         }
 
         [HttpGet("LastFiveProductsByEmployee")]
         public async Task<IActionResult> LastFiveProductsByEmployee(int id)
         {
-            var values = await _productRepository.GetLastFiveProductsByIdWithCategoryAsync(id);
+            var values = await _productRepository.GetLastFiveProductsByIdWithCategory(id);
             return Ok(values);
         }
 
         [HttpGet("ProductSearchList")]
         public async Task<IActionResult> ProductSearchList(string? searchValue, int propertyCategoryId, string? city)
         {
-            var values = await _productRepository.ResultProductWithSearchList(searchValue, propertyCategoryId, city);
+            var values = await _productRepository.ResultProductWithSearchList(searchValue ?? string.Empty, propertyCategoryId, city ?? string.Empty);
             return Ok(values);
         }
 
         [HttpGet("DealOfTheDayProductList")]
         public async Task<IActionResult> DealOfTheDayProductList()
         {
-            var values = await _productRepository.GetDealOfTheDayProductWithCategoryAsync();
+            var values = await _productRepository.GetDealOfTheDayProductWithCategory();
             return Ok(values);
         }
 
         [HttpGet("LastThreeProducts")]
         public async Task<IActionResult> LastThreeProducts()
         {
-            var values = await _productRepository.GetLastThreeProductsWithCategoryAsync();
+            var values = await _productRepository.GetLastThreeProductsWithCategory();
             return Ok(values);
         }
     }

@@ -13,7 +13,7 @@ namespace RealEstate_Dapper_Api.Repositories.CategoryRepository
             _context = context;
         }
 
-        public async void CreateCategory(CreateCategoryDto categoryDto)
+        public async Task CreateCategory(CreateCategoryDto categoryDto)
         {
             string query = "INSERT INTO Category (CategoryName, CategoryStatus) VALUES (@categoryName, @categoryStatus)";
             var parameters = new DynamicParameters();
@@ -25,7 +25,7 @@ namespace RealEstate_Dapper_Api.Repositories.CategoryRepository
             }
         }
 
-        public async void DeleteCategory(int id)
+        public async Task DeleteCategory(int id)
         {
             string query = "DELETE FROM Category WHERE CategoryId = @categoryId";
             var parameters = new DynamicParameters();
@@ -36,7 +36,7 @@ namespace RealEstate_Dapper_Api.Repositories.CategoryRepository
             }
         }
 
-        public async Task<List<ResultCategoryDto>> GetAllCategoryAsyn()
+        public async Task<List<ResultCategoryDto>> GetAllCategory()
         {
             string query = "SELECT * From Category";
             using(var connection = _context.CreateConnection())
@@ -54,11 +54,11 @@ namespace RealEstate_Dapper_Api.Repositories.CategoryRepository
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryFirstOrDefaultAsync<GetByIDCategoryDto>(query, parameters);
-                return values;
+                return values ?? throw new Exception("Bulunamadı");
             }
         }
 
-        public async void UpdateCategory(UpdateCategoryDto CategoryDto)
+        public async Task UpdateCategory(UpdateCategoryDto CategoryDto)
         {
             string query = "UPDATE Category SET CategoryName = @categoryName, CategoryStatus = @categoryStatus WHERE CategoryID = @categoryID";
             var parameters = new DynamicParameters();

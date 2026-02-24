@@ -5,10 +5,10 @@ namespace RealEstate_Dapper_Api.Repositories.WhoWeAreDetailRepository
 {
     public interface IWhoWeAreDetailRepository
     {
-        Task<List<ResultWhoWeAreDetailDto>> GetAllWhoWeAreDetailAsyn();
-        void CreateWhoWeAreDetail(CreateWhoWeAreDetailDto createWhoWeAreDetailDto);
-        void DeleteWhoWeAreDetail(int id);
-        void UpdateWhoWeAreDetail(UpdateWhoWeAreDetailDto updateWhoWeAreDetailDto);
+        Task<List<ResultWhoWeAreDetailDto>> GetAllWhoWeAreDetail();
+        Task CreateWhoWeAreDetail(CreateWhoWeAreDetailDto createWhoWeAreDetailDto);
+        Task DeleteWhoWeAreDetail(int id);
+        Task UpdateWhoWeAreDetail(UpdateWhoWeAreDetailDto updateWhoWeAreDetailDto);
         Task<GetByIdWhoWeAreDetailDto> GetWhoWeAreDetail(int id);
     }
 }

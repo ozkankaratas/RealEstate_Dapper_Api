@@ -12,7 +12,7 @@ namespace RealEstate_Dapper_Api.Repositories.PopularLocationRepository
             _context = context;
         }
 
-        public async void CreatePopularLocation(CreatePopularLocationDto createPopularLocationDto)
+        public async Task CreatePopularLocation(CreatePopularLocationDto createPopularLocationDto)
         {
             string query = "INSERT INTO PopularLocation (CityName, ImageUrl) VALUES (@CityName, @ImageUrl)";
             var parameters = new DynamicParameters();
@@ -25,7 +25,7 @@ namespace RealEstate_Dapper_Api.Repositories.PopularLocationRepository
 
         }
 
-        public async void DeletePopularLocation(int id)
+        public async Task DeletePopularLocation(int id)
         {
             string query = "DELETE FROM PopularLocation WHERE LocationID = @Id";
             var parameters = new DynamicParameters();
@@ -36,7 +36,7 @@ namespace RealEstate_Dapper_Api.Repositories.PopularLocationRepository
             }
         }
 
-        public async Task<List<ResultPopularLocationDto>> GetAllPopularLocationAsyn()
+        public async Task<List<ResultPopularLocationDto>> GetAllPopularLocation()
         {
             string query = "SELECT * FROM PopularLocation";
             using (var connection = _context.CreateConnection())
@@ -54,11 +54,11 @@ namespace RealEstate_Dapper_Api.Repositories.PopularLocationRepository
             using (var connection = _context.CreateConnection())
             {
                 var value = await connection.QueryFirstOrDefaultAsync<GetByIDPopularLocationDto>(query, parameters);
-                return value;
+                return value ?? throw new Exception("Bulunamadı");
             }
         }
 
-        public async void UpdatePopularLocation(UpdatePopularLocationDto updatePopularLocationDto)
+        public async Task UpdatePopularLocation(UpdatePopularLocationDto updatePopularLocationDto)
         {
             string query = "UPDATE PopularLocation SET CityName = @CityName, ImageUrl = @ImageUrl WHERE LocationID = @Id";
             var parameters = new DynamicParameters();

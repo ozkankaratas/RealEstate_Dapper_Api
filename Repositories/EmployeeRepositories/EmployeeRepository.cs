@@ -14,7 +14,7 @@ namespace RealEstate_Dapper_Api.Repositories.EmployeeRepositories
             _context = context;
         }
 
-        public async void CreateEmployee(CreateEmployeeDto createEmployeeDto)
+        public async Task CreateEmployee(CreateEmployeeDto createEmployeeDto)
         {
             string query = "INSERT INTO Employee (Name, Title, Email, PhoneNumber, ImageUrl, Status) " +
                            "VALUES (@name, @title, @email, @phoneNumber, @imageUrl, @status)";
@@ -32,7 +32,7 @@ namespace RealEstate_Dapper_Api.Repositories.EmployeeRepositories
             }
         }
 
-        public async void DeleteEmployee(int id)
+        public async Task DeleteEmployee(int id)
         {
             string query = "DELETE FROM Employee WHERE EmployeeID = @employeeID";
             var parameters = new DynamicParameters();
@@ -43,7 +43,7 @@ namespace RealEstate_Dapper_Api.Repositories.EmployeeRepositories
             }
         }
 
-        public async Task<List<ResultEmployeeDto>> GetAllEmployeeAsyn()
+        public async Task<List<ResultEmployeeDto>> GetAllEmployee()
         {
             string query = "SELECT * From Employee";
             using (var connection = _context.CreateConnection())
@@ -61,11 +61,11 @@ namespace RealEstate_Dapper_Api.Repositories.EmployeeRepositories
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryFirstOrDefaultAsync<GetByIDEmployeeDto>(query, parameters);
-                return values;
+                return values ?? throw new Exception("Bulunamadı"); ;
             }
         }
 
-        public async void UpdateEmployee(UpdateEmployeeDto updateEmployeeDto)
+        public async Task UpdateEmployee(UpdateEmployeeDto updateEmployeeDto)
         {
             string query = "UPDATE Employee SET Name = @name, Title = @title, Email = @email, " +
                            "PhoneNumber = @phoneNumber, ImageUrl = @imageUrl, Status = @status  WHERE EmployeeID = @employeeID";

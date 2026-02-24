@@ -4,10 +4,10 @@ namespace RealEstate_Dapper_Api.Repositories.PopularLocationRepository
 {
     public interface IPopularLocationRepository
     {
-        Task<List<ResultPopularLocationDto>> GetAllPopularLocationAsyn();
-        void CreatePopularLocation(CreatePopularLocationDto createPopularLocationDto);
-        void DeletePopularLocation(int id);
-        void UpdatePopularLocation(UpdatePopularLocationDto updatePopularLocationDto);
+        Task<List<ResultPopularLocationDto>> GetAllPopularLocation();
+        Task CreatePopularLocation(CreatePopularLocationDto createPopularLocationDto);
+        Task DeletePopularLocation(int id);
+        Task UpdatePopularLocation(UpdatePopularLocationDto updatePopularLocationDto);
         Task<GetByIDPopularLocationDto> GetPopularLocation(int id);
     }
 }
