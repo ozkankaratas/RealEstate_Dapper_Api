@@ -26,8 +26,8 @@ namespace RealEstate_Dapper_UI.Controllers
             var token = User.Claims.FirstOrDefault(x => x.Type == "realestatetoken")?.Value;
             if (token != null)
             {
-                var client = _httpClientFactory.CreateClient();
-                var responseMessage = await client.GetAsync("https://localhost:44338/api/Employees");
+                var client = _httpClientFactory.CreateClient("RealEstateApi");
+                var responseMessage = await client.GetAsync("Employees");
                 if (responseMessage.IsSuccessStatusCode)
                 {
                     var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -47,10 +47,10 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateEmployee(CreateEmployeeDto createEmployeeDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
             var jsonData = JsonConvert.SerializeObject(createEmployeeDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:44338/api/Employees", stringContent);
+            var responseMessage = await client.PostAsync("Employees", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -61,8 +61,8 @@ namespace RealEstate_Dapper_UI.Controllers
 
         public async Task<IActionResult> DeleteEmployee(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.DeleteAsync($"https://localhost:44338/api/Employees/{id}");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.DeleteAsync($"Employees/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -73,8 +73,8 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateEmployee(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:44338/api/Employees/{id}");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync($"Employees/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -87,10 +87,10 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateEmployee(UpdateEmployeeDto updateEmployeeDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
             var jsonData = JsonConvert.SerializeObject(updateEmployeeDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PutAsync("https://localhost:44338/api/Employees", stringContent);
+            var responseMessage = await client.PutAsync("Employees", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");

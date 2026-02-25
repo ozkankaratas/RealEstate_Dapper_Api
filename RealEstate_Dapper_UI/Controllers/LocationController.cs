@@ -16,8 +16,8 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpGet]
         public async Task<JsonResult> GetCities()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/Locations/cities");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("Locations/cities");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -30,8 +30,8 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpGet]
         public async Task<JsonResult> GetDistricts(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:44338/api/Locations/GetDistricts/{id}");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync($"Locations/GetDistricts/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -44,8 +44,8 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpGet]
         public async Task<JsonResult> GetSemts(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:44338/api/Locations/GetSemts/{id}");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync($"Locations/GetSemts/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -58,8 +58,8 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpGet]
         public async Task<JsonResult> GetNeighborhoods(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync($"https://localhost:44338/api/Locations/GetNeighborhoods/{id}");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync($"Locations/GetNeighborhoods/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

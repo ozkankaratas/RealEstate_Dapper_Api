@@ -17,9 +17,9 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.ViewComponents.EstateAgentNavba
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var id = _loginService.GetUserId;
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
 
-            var responseMessage = await client.GetAsync($"https://localhost:44338/api/Messages/LastThreeReceivedMessages?id=" + id);
+            var responseMessage = await client.GetAsync($"Messages/LastThreeReceivedMessages?id=" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

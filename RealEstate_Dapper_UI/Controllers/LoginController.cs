@@ -27,9 +27,9 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(CreateLoginDto createLoginDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
             var content = new StringContent(JsonSerializer.Serialize(createLoginDto), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync("https://localhost:44338/api/Login", content);
+            var response = await client.PostAsync("Login", content);
             if (response.IsSuccessStatusCode)
             {
                 var jsonData = await response.Content.ReadAsStringAsync();

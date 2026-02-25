@@ -13,11 +13,10 @@ namespace RealEstate_Dapper_UI.ViewComponents.HomePage
             _httpClientFactory = httpClientFactory;
         }
 
-        // Site canlıya alındığında responseMessage alanındaki header uri güncellenmelidir.
         public async Task <IViewComponentResult> InvokeAsync()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/Products/DealOfTheDayProductList");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("Products/DealOfTheDayProductList");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

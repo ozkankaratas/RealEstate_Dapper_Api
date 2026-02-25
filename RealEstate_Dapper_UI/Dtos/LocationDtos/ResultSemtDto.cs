@@ -3,6 +3,6 @@
     public class ResultSemtDto
     {
         public int SemtID { get; set; }
-        public string SemtName { get; set; }
+        public string? SemtName { get; set; }
     }
 }

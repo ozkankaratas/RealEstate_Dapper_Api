@@ -15,8 +15,8 @@ namespace RealEstate_Dapper_UI.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/Products/ProductListWithCategory");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("Products/ProductListWithCategory");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -29,8 +29,8 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateProduct()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/Categories");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("Categories");
 
             var jsonData = await responseMessage.Content.ReadAsStringAsync();
             var values = JsonConvert.DeserializeObject<List<ResultCategoryDto>>(jsonData);
@@ -53,10 +53,10 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
             var jsonData = JsonConvert.SerializeObject(createProductDto);
             StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:44338/api/Products", stringContent);
+            var responseMessage = await client.PostAsync("Products", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -66,8 +66,8 @@ namespace RealEstate_Dapper_UI.Controllers
 
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.DeleteAsync($"https://localhost:44338/api/Products/{id}");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.DeleteAsync($"Products/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -78,11 +78,11 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateProduct(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var client2 = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var client2 = _httpClientFactory.CreateClient("RealEstateApi");
 
-            var responseMessage = await client.GetAsync($"https://localhost:44338/api/Categories/");
-            var responseMessage2 = await client2.GetAsync($"https://localhost:44338/api/Products/{id}");
+            var responseMessage = await client.GetAsync("Categories");
+            var responseMessage2 = await client2.GetAsync($"Products/{id}");
 
 
             var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -105,10 +105,10 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProduct(UpdateProductDto updateProductDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
             var jsonData = JsonConvert.SerializeObject(updateProductDto);
             StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
-            var responseMessage = await client.PutAsync("https://localhost:44338/api/Products", stringContent);
+            var responseMessage = await client.PutAsync("Products", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -119,8 +119,8 @@ namespace RealEstate_Dapper_UI.Controllers
 
         public async Task<IActionResult> ChangeDealOfTheDayStatusToFalse(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsync($"https://localhost:44338/api/Products/ChangeDealOfTheDayStatusToFalse/{id}", null);
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.PutAsync($"Products/ChangeDealOfTheDayStatusToFalse/{id}", null);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
@@ -131,8 +131,8 @@ namespace RealEstate_Dapper_UI.Controllers
 
         public async Task<IActionResult> ChangeDealOfTheDayStatusToTrue(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsync($"https://localhost:44338/api/Products/ChangeDealOfTheDayStatusToTrue/{id}", null);
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.PutAsync($"Products/ChangeDealOfTheDayStatusToTrue/{id}", null);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");

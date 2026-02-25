@@ -15,8 +15,8 @@ namespace RealEstate_Dapper_UI.ViewComponents.PropertySingle
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
             id = 1; // Test amaçlı sabit bir değer atandı
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/PropertyAmenities/GetPropertyAmenity?id=" + id);
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("PropertyAmenities/GetPropertyAmenity?id=" + id);
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

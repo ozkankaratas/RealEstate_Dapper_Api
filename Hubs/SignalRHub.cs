@@ -12,8 +12,8 @@ namespace RealEstate_Dapper_Api.Hubs
 
         public async Task SendCategoryCount() 
         {
-            var client1 = _httpClientFactory.CreateClient();
-            var responseMessage1 = await client1.GetAsync("https://localhost:44338/api/Statistics/CategoryCount");
+            var client1 = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage1 = await client1.GetAsync("Statistics/CategoryCount");
             var value = await responseMessage1.Content.ReadAsStringAsync();
             await Clients.All.SendAsync("RecieveCategoryCount", value);
         }

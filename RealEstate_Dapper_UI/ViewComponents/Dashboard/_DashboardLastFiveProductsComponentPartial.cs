@@ -6,10 +6,15 @@ namespace RealEstate_Dapper_UI.ViewComponents.Dashboard
 {
     public class _DashboardLastFiveProductsComponentPartial : ViewComponent
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+        public _DashboardLastFiveProductsComponentPartial(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var client = new HttpClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/Products/LastFiveProducts");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("Products/LastFiveProducts");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

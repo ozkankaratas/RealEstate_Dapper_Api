@@ -1,9 +1,17 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using RealEstate_Dapper_UI.Models;
 using RealEstate_Dapper_UI.Services;
 using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+
+//builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettingsKey"));
+var baseUrl = builder.Configuration.GetSection("ApiSettingsKey:BaseUrl").Value;
+builder.Services.AddHttpClient("RealEstateApi", client =>
+{
+    client.BaseAddress = new Uri(baseUrl ?? throw new InvalidOperationException("Base URL is not configured."));
+});
 
 builder.Services.AddHttpClient();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCookie(JwtBearerDefaults.AuthenticationScheme, opt=>
@@ -29,10 +37,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     // Test ortamında detaylı hata sayfası
-    app.UseDeveloperExceptionPage();
+    //app.UseDeveloperExceptionPage();
 
     // Canlı ortamda özel hata sayfasına yönlendirme
-    //app.UseExceptionHandler("/ErrorPage/ServerError");
+    app.UseExceptionHandler("/ErrorPage/ServerError");
 }
 else
 {

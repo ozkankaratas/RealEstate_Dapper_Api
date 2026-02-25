@@ -22,8 +22,8 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
         public async Task<IActionResult> ActiveAdverts()
         {
             var id = _loginService.GetUserId;
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/Products/ActiveProductAdvertsListByEmployee?id=" + id);
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("Products/ActiveProductAdvertsListByEmployee?id=" + id);
 
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -37,8 +37,8 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
         public async Task<IActionResult> PassiveAdverts()
         {
             var id = _loginService.GetUserId;
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/Products/PassiveProductAdvertsListByEmployee?id=" + id);
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("Products/PassiveProductAdvertsListByEmployee?id=" + id);
 
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -52,13 +52,13 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateAdvert()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/Categories");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("Categories");
 
             var jsonData = await responseMessage.Content.ReadAsStringAsync();
             var values = JsonConvert.DeserializeObject<List<ResultCategoryDto>>(jsonData);
 
-            List<SelectListItem> categoryValues = (from x in values.ToList()
+            List<SelectListItem> categoryValues = (from x in values?.ToList() ?? new List<ResultCategoryDto>()
                                                    select new SelectListItem
                                                    {
                                                        Text = x.CategoryName,
@@ -103,12 +103,19 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
             createProductDto.Date = DateTime.Now;
             createProductDto.Status = true;
             var id = _loginService.GetUserId;
-            createProductDto.AppUserId = int.Parse(id);
-
-            var client = _httpClientFactory.CreateClient();
+            //createProductDto.AppUserId = int.Parse(id);
+            if (int.TryParse(id, out int userId))
+            {
+                createProductDto.AppUserId = userId;
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
             var jsonData = JsonConvert.SerializeObject(createProductDto);
             StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:44338/api/Products", stringContent);
+            var responseMessage = await client.PostAsync("Products", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("ActiveAdverts", "MyAdverts", new { area = "EstateAgent" });
@@ -118,8 +125,8 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
 
         public async Task<IActionResult> DeleteAdvert(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.DeleteAsync($"https://localhost:44338/api/Products/{id}");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.DeleteAsync($"Products/{id}");
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("ActiveAdverts", "MyAdverts", new { area = "EstateAgent" });
@@ -130,44 +137,44 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateAdvert(int id)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
 
-            var responseMessage1 = await client.GetAsync($"https://localhost:44338/api/Products/GetProductById?id={id}");
+            var responseMessage1 = await client.GetAsync($"Products/GetProductById?id={id}");
             if (!responseMessage1.IsSuccessStatusCode) return RedirectToAction("ActiveAdverts", "MyAdverts", new { area = "EstateAgent" });
             var jsonData1 = await responseMessage1.Content.ReadAsStringAsync();
             var values1 = JsonConvert.DeserializeObject<UpdateProductDto>(jsonData1);
 
             
-            var responseMessage2 = await client.GetAsync($"https://localhost:44338/api/Categories/");
+            var responseMessage2 = await client.GetAsync("Categories");
             var jsonData2 = await responseMessage2.Content.ReadAsStringAsync();
             var values2 = JsonConvert.DeserializeObject<List<ResultCategoryDto>>(jsonData2);
 
-            ViewBag.categories = values2.Select(x => new SelectListItem
+            ViewBag.categories = values2?.Select(x => new SelectListItem
             {
                 Text = x.CategoryName,
                 Value = x.CategoryID.ToString(),
-                Selected = x.CategoryID == values1.ProductCategory
+                Selected = x.CategoryID == values1?.ProductCategory
             }).ToList();
 
         
-            var responseMessage3 = await client.GetAsync("https://localhost:44338/api/Locations/cities");
+            var responseMessage3 = await client.GetAsync("Locations/cities");
             var jsonData3 = await responseMessage3.Content.ReadAsStringAsync();
             var values3 = JsonConvert.DeserializeObject<List<ResultCityDto>>(jsonData3);
 
-            ViewBag.cities = values3.Select(x => new SelectListItem
+            ViewBag.cities = values3?.Select(x => new SelectListItem
             {
                 Text = x.CityName,
                 Value = x.CityID.ToString(),
-                Selected = x.CityID.ToString() == values1.City
+                Selected = x.CityID.ToString() == values1?.City
             }).ToList();
 
-            if (!string.IsNullOrEmpty(values1.City))
+            if (!string.IsNullOrEmpty(values1?.City))
             {
-                var responseMessage4 = await client.GetAsync($"https://localhost:44338/api/Locations/GetDistricts/{values1.City}");
+                var responseMessage4 = await client.GetAsync($"Locations/GetDistricts/{values1.City}");
                 var jsonData4 = await responseMessage4.Content.ReadAsStringAsync();
                 var values4 = JsonConvert.DeserializeObject<List<ResultDistrictDto>>(jsonData4);
 
-                ViewBag.districts = values4.Select(x => new SelectListItem
+                ViewBag.districts = values4?.Select(x => new SelectListItem
                 {
                     Text = x.DistrictName,
                     Value = x.DistrictID.ToString(),
@@ -176,13 +183,13 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
             }
             else { ViewBag.districts = new List<SelectListItem>(); }
 
-            if (!string.IsNullOrEmpty(values1.District))
+            if (!string.IsNullOrEmpty(values1?.District))
             {
-                var responseMessage5 = await client.GetAsync($"https://localhost:44338/api/Locations/GetSemts/{values1.District}");
+                var responseMessage5 = await client.GetAsync($"Locations/GetSemts/{values1.District}");
                 var jsonData5 = await responseMessage5.Content.ReadAsStringAsync();
                 var values5 = JsonConvert.DeserializeObject<List<ResultSemtDto>>(jsonData5);
 
-                ViewBag.semtler = values5.Select(x => new SelectListItem
+                ViewBag.semtler = values5?.Select(x => new SelectListItem
                 {
                     Text = x.SemtName,
                     Value = x.SemtID.ToString(),
@@ -191,13 +198,13 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
             }
             else { ViewBag.semtler = new List<SelectListItem>(); }
 
-            if (!string.IsNullOrEmpty(values1.Semt))
+            if (!string.IsNullOrEmpty(values1?.Semt))
             {
-                var responseMessage6 = await client.GetAsync($"https://localhost:44338/api/Locations/GetNeighborhoods/{values1.Semt}");
+                var responseMessage6 = await client.GetAsync($"Locations/GetNeighborhoods/{values1.Semt}");
                 var jsonData6 = await responseMessage6.Content.ReadAsStringAsync();
                 var values6 = JsonConvert.DeserializeObject<List<ResultNeighborhoodDto>>(jsonData6);
 
-                ViewBag.neighborhoods = values6.Select(x => new SelectListItem
+                ViewBag.neighborhoods = values6?.Select(x => new SelectListItem
                 {
                     Text = x.NeighborhoodName,
                     Value = x.NeighborhoodID.ToString(),
@@ -237,10 +244,10 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
             }
 
             updateProductDto.Status = true;
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
             var jsonData = JsonConvert.SerializeObject(updateProductDto);
             StringContent stringContent = new StringContent(jsonData, System.Text.Encoding.UTF8, "application/json");
-            var responseMessage = await client.PutAsync("https://localhost:44338/api/Products", stringContent);
+            var responseMessage = await client.PutAsync("Products", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("ActiveAdverts", "MyAdverts", new { area = "EstateAgent" });
@@ -250,8 +257,8 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
 
         public async Task<IActionResult> ChangeStatusToFalse(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsync($"https://localhost:44338/api/Products/ChangeStatusToFalse/{id}", null);
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.PutAsync($"Products/ChangeStatusToFalse/{id}", null);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("ActiveAdverts", "MyAdverts", new { area = "EstateAgent" });
@@ -262,8 +269,8 @@ namespace RealEstate_Dapper_UI.Areas.EstateAgent.Controllers
 
         public async Task<IActionResult> ChangeStatusToTrue(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.PutAsync($"https://localhost:44338/api/Products/ChangeStatusToTrue/{id}", null);
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.PutAsync($"Products/ChangeStatusToTrue/{id}", null);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("PassiveAdverts", "MyAdverts", new { area = "EstateAgent" });

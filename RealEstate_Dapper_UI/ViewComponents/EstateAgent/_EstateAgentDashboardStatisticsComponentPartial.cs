@@ -18,29 +18,26 @@ namespace RealEstate_Dapper_UI.ViewComponents.EstateAgent
             var id = _loginService.GetUserId;
 
             #region Statictics1 - ProductCount
-            var client1 = _httpClientFactory.CreateClient();
-            var responseMessage1 = await client1.GetAsync("https://localhost:44338/api/EstateAgentDashboardStatistic/AllProductCount");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage1 = await client.GetAsync("EstateAgentDashboardStatistic/AllProductCount");
             var jsonString1 = await responseMessage1.Content.ReadAsStringAsync();
             ViewBag.ProductCount = jsonString1;
             #endregion
 
             #region Statictics2 - ProductCountByEmployee
-            var client2 = _httpClientFactory.CreateClient();
-            var responseMessage2 = await client2.GetAsync("https://localhost:44338/api/EstateAgentDashboardStatistic/ProductCountByEmployeeId?id=" + id);
+            var responseMessage2 = await client.GetAsync("EstateAgentDashboardStatistic/ProductCountByEmployeeId?id=" + id);
             var jsonString2 = await responseMessage2.Content.ReadAsStringAsync();
             ViewBag.ProductCountByEmployee = jsonString2;
             #endregion
 
             #region Statictics3 - ActiveProductCountByEmployee
-            var client3 = _httpClientFactory.CreateClient();
-            var responseMessage3 = await client3.GetAsync("https://localhost:44338/api/EstateAgentDashboardStatistic/ActiveProductCount?id=" + id);
+            var responseMessage3 = await client.GetAsync("EstateAgentDashboardStatistic/ActiveProductCount?id=" + id);
             var jsonString3 = await responseMessage3.Content.ReadAsStringAsync();
             ViewBag.ActiveProductCountByEmployee = jsonString3;
             #endregion
 
             #region Statictics4 - PassiveProductCountByEmployee
-            var client4 = _httpClientFactory.CreateClient();
-            var responseMessage4 = await client4.GetAsync("https://localhost:44338/api/EstateAgentDashboardStatistic/PassiveProductCount?id=" + id);
+            var responseMessage4 = await client.GetAsync("EstateAgentDashboardStatistic/PassiveProductCount?id=" + id);
             var jsonString4 = await responseMessage4.Content.ReadAsStringAsync();
             ViewBag.PassiveProductCountByEmployee = jsonString4;
             #endregion

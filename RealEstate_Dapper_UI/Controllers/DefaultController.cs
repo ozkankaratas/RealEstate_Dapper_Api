@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RealEstate_Dapper_UI.Dtos.CategoryDtos;
 using RealEstate_Dapper_UI.Dtos.LocationDtos;
+using RealEstate_Dapper_UI.Models;
 
 namespace RealEstate_Dapper_UI.Controllers
 {
@@ -15,9 +17,9 @@ namespace RealEstate_Dapper_UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/Categories");
-            var responseMessage2 = await client.GetAsync("https://localhost:44338/api/Locations/Cities");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("Categories");
+            var responseMessage2 = await client.GetAsync("Locations/Cities");
 
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -30,7 +32,7 @@ namespace RealEstate_Dapper_UI.Controllers
             {
                 var jsonData2 = await responseMessage2.Content.ReadAsStringAsync();
                 var values2 = JsonConvert.DeserializeObject<List<ResultCityDto>>(jsonData2);
-                ViewBag.cities = values2.OrderBy(c => c.CityName).ToList();
+                ViewBag.cities = values2?.OrderBy(c => c.CityName).ToList() ?? new List<ResultCityDto>();
             }
             return View();
         }

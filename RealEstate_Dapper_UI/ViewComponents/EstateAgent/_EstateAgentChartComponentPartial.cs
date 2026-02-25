@@ -17,10 +17,10 @@ namespace RealEstate_Dapper_UI.ViewComponents.EstateAgent
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var id = _loginService.GetUserId;
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/EstateAgentChart/GetTopCitiesByProductChart");
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
+            var responseMessage = await client.GetAsync("EstateAgentChart/GetTopCitiesByProductChart");
             
-            var responseMessage2 = await client.GetAsync("https://localhost:44338/api/EstateAgentChart/EmployeeProductCountByYear?id=" + id);
+            var responseMessage2 = await client.GetAsync("EstateAgentChart/EmployeeProductCountByYear?id=" + id);
 
             if (responseMessage.IsSuccessStatusCode && responseMessage2.IsSuccessStatusCode)
             {

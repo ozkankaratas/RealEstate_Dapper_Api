@@ -16,11 +16,10 @@ namespace RealEstate_Dapper_UI.ViewComponents.HomePage
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var client = _httpClientFactory.CreateClient();
-            var client2 = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("RealEstateApi");
 
-            var responseMessage = await client.GetAsync("https://localhost:44338/api/WhoWeAreDetails");
-            var responseMessage2 = await client2.GetAsync("https://localhost:44338/api/Services");
+            var responseMessage = await client.GetAsync("WhoWeAreDetails");
+            var responseMessage2 = await client.GetAsync("Services");
 
             if (responseMessage.IsSuccessStatusCode && responseMessage2.IsSuccessStatusCode)
             {
@@ -30,10 +29,10 @@ namespace RealEstate_Dapper_UI.ViewComponents.HomePage
                 var value = JsonConvert.DeserializeObject<List<ResultWhoWeAreDetailDto>>(jsonData);
                 var value2 = JsonConvert.DeserializeObject<List<ResultServiceDto>>(jsonData2);
 
-                ViewBag.title = value.Select(x => x.Title).FirstOrDefault();
-                ViewBag.subTitle = value.Select(x => x.Subtitle).FirstOrDefault();
-                ViewBag.description1 = value.Select(x => x.Description1).FirstOrDefault();
-                ViewBag.description2 = value.Select(x => x.Description2).FirstOrDefault();
+                ViewBag.title = value?.Select(x => x.Title).FirstOrDefault();
+                ViewBag.subTitle = value?.Select(x => x.Subtitle).FirstOrDefault();
+                ViewBag.description1 = value?.Select(x => x.Description1).FirstOrDefault();
+                ViewBag.description2 = value?.Select(x => x.Description2).FirstOrDefault();
                 return View(value2);
             }
             return View();
