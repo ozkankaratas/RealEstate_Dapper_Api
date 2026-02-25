@@ -14,7 +14,6 @@ namespace RealEstate_Dapper_UI.ViewComponents.PropertySingle
 
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
-            id = 1; // Test amaçlı olarak 1 değeri atandı
             var client = _httpClientFactory.CreateClient("RealEstateApi");
             var responseMessage = await client.GetAsync("ProductImages/GetImagesByProductId?id=" + id);
             if (responseMessage.IsSuccessStatusCode)
@@ -23,7 +22,7 @@ namespace RealEstate_Dapper_UI.ViewComponents.PropertySingle
                 var values = JsonConvert.DeserializeObject<List<GetProductImageByProductIdDto>>(jsonData);
                 return View(values);
             }
-            return View();
+            return View(new List<GetProductImageByProductIdDto>());
         }
     }
 }

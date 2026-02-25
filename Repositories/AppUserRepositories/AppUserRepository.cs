@@ -13,13 +13,23 @@ namespace RealEstate_Dapper_Api.Repositories.AppUserRepositories
         }
         public async Task<GetAppUserByProductIdDto> GetAppUserByProductId(int id)
         {
-           string query = @"SELECT * FROM AppUser WHERE UserId = @UserId";
+            string query = @"
+                SELECT 
+                    u.UserId, 
+                    u.Name, 
+                    u.Email, 
+                    u.Phone, 
+                    u.UserImageUrl, 
+                    p.AppUserId 
+                FROM AppUser u
+                INNER JOIN Product p ON u.UserId = p.AppUserId
+                WHERE p.ProductId = @productId";
             var parameters = new DynamicParameters();
-            parameters.Add("@UserId", id);
+            parameters.Add("@productId", id);
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryFirstOrDefaultAsync<GetAppUserByProductIdDto>(query, parameters);
-                return values;
+                return values ?? new GetAppUserByProductIdDto();
             }
         }
     }

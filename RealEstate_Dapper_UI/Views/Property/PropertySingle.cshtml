@@ -48,7 +48,16 @@
             <div class="col-lg-8 w3l-news">
                 <div class="blog-single-post">
 
-                    @await Component.InvokeAsync("_PropertySliderComponentPartial")
+                    <div class="single-post-image mb-5">
+                        <div class="owl-blog owl-carousel owl-theme">
+                            <div class="item">
+                                <div class="card">
+                                    <img src="@ViewBag.coverImage" class="img-fluid radius-image" alt="image">
+                                </div>
+                            </div>
+                            @await Component.InvokeAsync("_PropertySliderComponentPartial", new { id = ViewBag.id })
+                        </div>
+                    </div>
 
                     <div class="single-bg-white mb-4">
                         <h3 class="post-content-title mb-3">İlan Açıklaması</h3>
@@ -75,7 +84,7 @@
                             <li><strong>Yatak Odası Sayısı:</strong> @ViewBag.bedroomCount </li>
                             <li><strong>Banyo Sayısı:</strong> @ViewBag.bathroomCount </li>
                             <li><strong>Yapı Tipi:</strong> @ViewBag.type </li>
-                            @if (@ViewBag.garageSize > 0)
+                            @if (ViewBag.garageSize != null && ViewBag.garageSize > 0)
                             {
                                 <li><strong>Garaj Boyutu:</strong> @ViewBag.garageSize Araç</li>
                             }
@@ -84,10 +93,10 @@
                                 <li><strong>Garaj:</strong> Mevcut Değil</li>
                             }
                             <li><strong>Yapım Yılı:</strong> @ViewBag.buildYear </li>
-                            <li><strong>İlan Tarihi :</strong> @ViewBag.date.ToString("dd/MM/yyyy")</li>
+                            <li><strong>İlan Tarihi :</strong> @(ViewBag.date != null ? ViewBag.date.ToString("dd/MM/yyyy") : "Belirtilmemiş")</li>
                         </ul>
                     </div>
-                    @await Component.InvokeAsync("_PropertyAmenityByPropertyIdComponentPartial")
+                    @await Component.InvokeAsync("_PropertyAmenityByPropertyIdComponentPartial", new { id = ViewBag.id })
 
 
                     @if (ViewBag.videoUrl != null && !string.IsNullOrEmpty(ViewBag.videoUrl.ToString()))
@@ -103,7 +112,7 @@
 
                 </div>
             </div>
-            @await Component.InvokeAsync("_PropertyAppUserComponentPartial")
+            @await Component.InvokeAsync("_PropertyAppUserComponentPartial", new { id = ViewBag.id })
         </div>
     </div>
 </section>

@@ -50,7 +50,6 @@ namespace RealEstate_Dapper_UI.Controllers
         [HttpGet]
         public async Task<IActionResult> PropertySingle(int id)
         {
-            id = 3;
             var client = _httpClientFactory.CreateClient("RealEstateApi");
 
             var responseMessage = await client.GetAsync("Products/GetProductById?id=" + id);
@@ -58,6 +57,7 @@ namespace RealEstate_Dapper_UI.Controllers
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
                 var values = JsonConvert.DeserializeObject<ResultProductWithCategoryDto>(jsonData);
+                ViewBag.coverImage = values.CoverImage ?? "productImages/default.png";
                 ViewBag.title1 = values.Title.ToString();
                 ViewBag.price = values.Price.ToString("N0", new System.Globalization.CultureInfo("tr-TR"));
                 ViewBag.city = values.CityName;
