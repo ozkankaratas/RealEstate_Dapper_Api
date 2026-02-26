@@ -1,4 +1,5 @@
 ﻿@using RealEstate_Dapper_UI.Services.Helpers
+@model List<ResultPropertyAmenityDto>
 
 @{
     ViewData["Title"] = "PropertySingle";
@@ -52,7 +53,7 @@
                         <div class="owl-blog owl-carousel owl-theme">
                             <div class="item">
                                 <div class="card">
-                                    <img src="@ViewBag.coverImage" class="img-fluid radius-image" alt="image">
+                                    <img src="@ViewBag.coverImage" class="img-fluid radius-image slider-fixed-image" alt="image">
                                 </div>
                             </div>
                             @await Component.InvokeAsync("_PropertySliderComponentPartial", new { id = ViewBag.id })
@@ -96,8 +97,11 @@
                             <li><strong>İlan Tarihi :</strong> @(ViewBag.date != null ? ViewBag.date.ToString("dd/MM/yyyy") : "Belirtilmemiş")</li>
                         </ul>
                     </div>
-                    @await Component.InvokeAsync("_PropertyAmenityByPropertyIdComponentPartial", new { id = ViewBag.id })
 
+                    @if(Model != null && Model.Count > 0)
+                    {
+                        @await Component.InvokeAsync("_PropertyAmenityByPropertyIdComponentPartial", new { id = ViewBag.id })
+                    }
 
                     @if (ViewBag.videoUrl != null && !string.IsNullOrEmpty(ViewBag.videoUrl.ToString()))
                     {

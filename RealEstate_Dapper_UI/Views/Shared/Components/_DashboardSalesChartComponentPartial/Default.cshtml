@@ -1,0 +1,83 @@
+﻿<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-light text-center rounded p-4">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h6 class="mb-0">En Fazla İlana Sahip Şehirler</h6>
+                </div>
+                <canvas id="myStaticCityChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-light text-center rounded p-4">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h6 class="mb-0">Yıllara Göre İlanlarınız</h6>
+                </div>
+                <canvas id="myStaticYearlyChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sayfa tamamen yüklendiğinde grafikleri çiz (Güvenlik önlemi)
+    document.addEventListener("DOMContentLoaded", function () {
+        
+        // --- GRAFİK 1: Şehir Dağılımı (Bar) ---
+        const ctx1 = document.getElementById('myStaticCityChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['İstanbul', 'Ankara', 'İzmir', 'Antalya', 'Bursa'],
+                datasets: [{
+                    label: "İlan Sayısı",
+                    data: [150, 85, 60, 45, 30],
+                    backgroundColor: "rgba(0, 156, 255, .7)",
+                    hoverBackgroundColor: "rgba(0, 156, 255, 1)",
+                    borderRadius: 8,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { drawBorder: false, color: '#ded9d9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // --- GRAFİK 2: Yıllık İlanlar (Line) ---
+        const ctx2 = document.getElementById('myStaticYearlyChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+                datasets: [{
+                    label: 'İlan Sayısı',
+                    data: [20, 35, 60, 95, 150, 210],
+                    backgroundColor: "rgba(0, 156, 255, .2)",
+                    borderColor: "rgba(0, 156, 255, 1)",
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { drawBorder: false, color: '#ded9d9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    });
+</script>

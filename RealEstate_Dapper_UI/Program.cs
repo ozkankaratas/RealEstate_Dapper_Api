@@ -64,6 +64,11 @@ app.MapControllerRoute(
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
+    name: "property",
+    pattern: "ilan/{slug}/{id}", 
+    defaults: new { controller = "Property", action = "PropertySingle" }); 
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 

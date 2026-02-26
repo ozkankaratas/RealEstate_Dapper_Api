@@ -57,3 +57,10 @@ html {
         left: 4px; 
         background-color: #adb5bd;
     }
+
+.slider-fixed-image {
+    width: 100%;
+    height: 500px; /* Slider'ın olmasını istediğiniz standart yükseklik. Tasarımınıza göre 400px, 600px vb. yapabilirsiniz. */
+    object-fit: cover; /* Resmi sündürmeden alanı tamamen kaplamasını sağlar */
+    object-position: center; /* Kırpma işlemi olursa resmin tam ortasını odaklar */
+}

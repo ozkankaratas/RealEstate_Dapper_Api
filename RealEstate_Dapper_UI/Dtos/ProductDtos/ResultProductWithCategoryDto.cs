@@ -16,6 +16,7 @@
         public string? NeighborhoodName { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
+        public string? SlugUrl { get; set; }
         public string? Description { get; set; }
         public string? Type { get; set; }
         public int ProductCategory { get; set; }

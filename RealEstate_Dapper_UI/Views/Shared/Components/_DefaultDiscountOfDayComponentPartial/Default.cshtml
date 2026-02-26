@@ -9,20 +9,20 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="grids5-info">
                             <span class="posted-date">
-                                <a href="/Property/PropertySingle?id=@item.ProductID">
+                                <a href="@Url.Action("PropertySingle", "Property", new { slug = item.SlugUrl ?? "ilan-detay", id = item.ProductID })">
                                     <span class="small">@item.Date.Year</span>
                                     <span class="big">@item.Date.Day</span>
                                     <span class="small">@item.Date.ToString("MMMM", new System.Globalization.CultureInfo("tr-TR"))</span>
                                 </a>
                             </span>
-                            <a href="/Property/PropertySingle?id=@item.ProductID" class="d-block zoom">
+                            <a href="@Url.Action("PropertySingle", "Property", new { slug = item.SlugUrl ?? "ilan-detay", id = item.ProductID })" class="d-block zoom">
                                 <img src="@item.CoverImage" alt=""
                                      class="img-fluid news-image"
                                      style="height: 250px; width: 100%; object-fit: cover;" />
                             </a>
                             <div class="blog-info">
-                                <a href="/Property/PropertySingle?id=@item.ProductID" class="category">@item.Type</a>
-                                <h4><a href="#blog-single">@item.Title</a></h4>
+                                <a href="@Url.Action("PropertySingle", "Property", new { slug = item.SlugUrl ?? "ilan-detay", id = item.ProductID })" class="category">@item.Type</a>
+                                <h4><a href="@Url.Action("PropertySingle", "Property", new { slug = item.SlugUrl ?? "ilan-detay", id = item.ProductID })">@item.Title</a></h4>
                                 <p style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5em; height: 3em; margin-bottom: 0;">
                                     @item.Description
                                 </p>
